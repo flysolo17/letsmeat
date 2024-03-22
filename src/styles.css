@@ -1,1 +1,51 @@
 /* You can add global styles to this file, and also import other style files */
+@import url("https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,300&family=Poppins:wght@300;400;500;700;800;900&display=swap");
+
+@import "ngx-toastr/toastr";
+
+* html,
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Poppins", sans-serif;
+}
+
+:root {
+  --primary-color: #014422;
+  --bg-color: #f0f1f3;
+}
+
+button {
+  font-size: small;
+  font-weight: 400;
+}
+
+.profile-img {
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.search-input {
+  border: none;
+  border-radius: 10px;
+  padding: 10px;
+  max-width: 400px;
+  background-color: var(--bg-color);
+  outline: none;
+}
+
+.pdf-content {
+  background-color: white;
+  font-family: Arial, sans-serif; /* Use a common web-safe font */
+  width: 210mm;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  height: 297mm;
+  margin: 0 auto;
+  padding: 1rem;
+}
+p {
+  padding: 0;
+  margin: 0;
+}

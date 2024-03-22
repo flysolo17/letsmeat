@@ -1,0 +1,137 @@
+<div class="d-flex h-100 bg-white">
+  <hr />
+  <div class="chat-container w-25 h-100 overflow-y-scroll">
+    <div class="shadow p-3 bg-body-tertiary sticky-top">
+      <img
+        class="profile-img me-3"
+        src="../../../../assets/images/logo.png"
+        width="40px"
+        height="40px"
+      />
+      JJF MESSAGES
+    </div>
+    <ul class="list-group h-100 list-group-flush">
+      <li
+        class="list-group-item"
+        *ngFor="let chats of customerWithMessages$; index as index"
+        [style.backgroundColor]="selectedConvo$ === index ? '#f0f1f3' : 'white'"
+        (click)="setSelectedConvo(index)"
+      >
+        <div class="d-flex gap-2">
+          <img
+            class="profile-img me-3"
+            [src]="
+              chats.customer.profile !== ''
+                ? chats.customer.profile
+                : '../../../../assets/images/profile.jpg'
+            "
+            width="40px"
+            height="40px"
+          />
+          <div class="flex-grow-1">
+            <div class="d-flex">
+              <p class="fw-bold flex-grow-1">{{ chats.customer.fullname }}</p>
+              <p class="fw-light" *ngIf="chats.messages.length !== 0">
+                {{
+                  chats.messages[
+                    chats.messages.length - 1
+                  ].createdAt.toLocaleDateString()
+                }}
+              </p>
+            </div>
+            <p
+              *ngIf="chats.messages.length !== 0"
+              [ngStyle]="{
+                color:
+                  chats.messages[chats.messages.length - 1].senderID !==
+                  users$?.id
+                    ? 'text-secondary'
+                    : 'text-dark',
+                'font-weight':
+                  chats.messages[chats.messages.length - 1].senderID !==
+                  users$?.id
+                    ? 'bold'
+                    : 'lighter'
+              }"
+            >
+              {{ chats.messages[chats.messages.length - 1].message }}
+            </p>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <div class="convo-container w-75 h-100 overflow-y-scroll">
+    <div
+      class="shadow p-3 bg-body-tertiary sticky-top"
+      *ngIf="selectedConvo$ !== -1"
+    >
+      <img
+        class="profile-img me-3"
+        [src]="
+          customerWithMessages$[selectedConvo$].customer.profile !== ''
+            ? customerWithMessages$[selectedConvo$].customer.profile
+            : '../../../../assets/images/profile.jpg'
+        "
+        width="40px"
+        height="40px"
+      />
+      {{ customerWithMessages$[selectedConvo$].customer.fullname }}
+    </div>
+    <div
+      class="flex-grow-1 d-flex flex-column align-items-center justify-content-center"
+    >
+      <p *ngIf="selectedConvo$ === -1">No conversation selected</p>
+      <ul
+        class="list-group h-100 list-group-flush w-100"
+        style="list-style: none"
+        *ngIf="selectedConvo$ !== -1"
+      >
+        <li
+          class="list-group-item"
+          *ngFor="
+            let messages of customerWithMessages$[selectedConvo$]?.messages;
+            index as index
+          "
+        >
+          <div
+            class="d-flex align-items-center"
+            [style.justifyContent]="
+              users$?.id === messages.senderID ? 'end' : 'start'
+            "
+          >
+            <p
+              class="p-3 rounded text-white fw-bold"
+              style="max-width: 400px"
+              [style.backgroundColor]="
+                users$?.id === messages.senderID ? 'green' : 'red'
+              "
+            >
+              {{ messages.message }}
+              <br />
+              <span class="fw-light">{{
+                formatMessageDate(messages.createdAt)
+              }}</span>
+            </p>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <div
+      class="shadow p-3 bg-white sticky-bottom"
+      *ngIf="selectedConvo$ !== -1"
+    >
+      <div class="input-group">
+        <input class="form-control" type="text" [(ngModel)]="message$" />
+        <button
+          class="btn btn-outline-success"
+          (click)="
+            sendMessage(customerWithMessages$[selectedConvo$].customer.id ?? '')
+          "
+        >
+          <i class="fa-solid fa-paper-plane"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

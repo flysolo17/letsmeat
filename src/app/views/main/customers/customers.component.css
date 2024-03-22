@@ -1,0 +1,7 @@
+.box {
+  margin: 1rem;
+  padding: 1rem;
+  border-radius: 10px;
+  background-color: white;
+  flex-grow: 1;
+}

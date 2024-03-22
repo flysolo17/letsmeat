@@ -1,0 +1,92 @@
+<div
+  class="container-fluid vh-100 d-flex align-items-center justify-content-center"
+>
+  <div
+    class="container d-flex gap-2 flex-column align-items-center justify-content-center"
+  >
+    <img
+      src="../../../../assets/images/logo.png"
+      width="200px"
+      height="200px"
+    />
+    <h3>Login</h3>
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="w-50">
+      <div class="form-floating mb-3">
+        <input
+          type="email"
+          class="form-control"
+          id="email"
+          formControlName="email"
+        />
+        <label for="email" class="form-label">Email:</label>
+        <div
+          *ngIf="
+            loginForm.get('email')?.hasError('required') &&
+            loginForm.get('email')?.touched
+          "
+          class="text-danger"
+        >
+          Email is required.
+        </div>
+        <div
+          *ngIf="
+            loginForm.get('email')?.hasError('email') &&
+            loginForm.get('email')?.touched
+          "
+          class="text-danger"
+        >
+          Please enter a valid email address.
+        </div>
+      </div>
+      <div class="input-group mb-3">
+        <div class="form-floating">
+          <input
+            type="password"
+            class="form-control"
+            id="password"
+            formControlName="password"
+            name="password"
+            required
+            #passwordInput
+          />
+          <label for="password" class="form-label">Password:</label>
+          <span
+            *ngIf="
+              loginForm.get('password')?.invalid &&
+              loginForm.get('password')?.touched
+            "
+            class="text-danger"
+          >
+            Password is required.
+          </span>
+        </div>
+        <button
+          type="button"
+          class="btn btn-outline-secondary"
+          (click)="
+            passwordInput.type =
+              passwordInput.type === 'text' ? 'password' : 'text'
+          "
+        >
+          <i
+            class="far"
+            [ngClass]="{
+              'fa-eye': passwordInput.type === 'password',
+              'fa-eye-slash': passwordInput.type === 'text'
+            }"
+          ></i>
+        </button>
+      </div>
+      <div class="d-flex flex-column gap-2 w-100">
+        <button type="submit" class="btn btn-success btn-md">Login</button>
+        <button
+          type="button"
+          class="btn btn-light text-danger"
+          (click)="forgot()"
+        >
+          Forgot Password
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,53 @@
+.box {
+  border-radius: 10px;
+}
+
+.product-card {
+  display: flex;
+  height: 250px;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+
+  border-radius: 10px;
+}
+.product-card:hover {
+  background-color: var(--bg-color);
+  border-radius: 10px;
+  cursor: pointer;
+}
+.product-name {
+  text-transform: uppercase;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  font-size: small;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.nav-pills .nav-link {
+  background-color: white;
+  color: black;
+  font-size: medium;
+  margin-right: 10px;
+  font-weight: 700;
+}
+.nav-pills .nav-link.active {
+  background-color: green;
+  color: white;
+}
+
+.nav-pills .nav-link:hover {
+  background-color: green;
+  color: white;
+  cursor: pointer;
+}
+
+.tab-content {
+  border-radius: 10px;
+}
+
+.orders {
+  border-radius: 10px;
+}

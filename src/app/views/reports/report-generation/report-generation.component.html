@@ -1,0 +1,67 @@
+<div class="container-fluid m-auto p-3">
+  <div class="">
+    <button class="btn btn-outline-secondary" (click)="convertToPdf()">
+      Download Report
+    </button>
+  </div>
+  <div #pdfContent class="pdf-content">
+    <div class="d-flex w-100 align-items-center justify-content-between p-1">
+      <img
+        src="../../../../assets/images//logo.png"
+        width="50px"
+        height="50px"
+      />
+      <div class="d-flex flex-column align-items-end m-0 gap-0">
+        <small class="fw-bold">{{ title$ }}</small>
+        <small class="fw-bold">FROM : {{ date$ }}</small>
+      </div>
+    </div>
+    <table class="table">
+      <thead class="bg-success text-white">
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Invoice ID</th>
+          <th scope="col">Total</th>
+          <th scope="col">Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let transaction of transactions$; index as index">
+          <th>{{ index + 1 }}</th>
+          <td>
+            <small class="small-text"> {{ transaction.id }}</small>
+          </td>
+          <td>
+            <small class="small-text">{{
+              transaction.payment.total.toLocaleString("en-us", {
+                style: "currency",
+                currency: "PHP"
+              })
+            }}</small>
+          </td>
+          <td>
+            <small class="small-text">{{
+              transaction.transactionDate.toDateString()
+            }}</small>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="d-flex w-100 align-items-center justify-content-between">
+      <div class="d-flex flex-column align-items-center justify-content-center">
+        <hr width="300px" />
+        <small> Owner of JJF Foods</small>
+      </div>
+
+      <small class="fw-bold"
+        >Total
+        {{
+          getTotal().toLocaleString("en-us", {
+            style: "currency",
+            currency: "PHP"
+          })
+        }}</small
+      >
+    </div>
+  </div>
+</div>

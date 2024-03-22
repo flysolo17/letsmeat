@@ -1,0 +1,156 @@
+<div class="container-fluid h-100 p-3">
+  <div class="d-flex flex-column gap-3 w-100 align-items-center p-3">
+    <div class="container-fluid box d-flex flex-column gap-3">
+      <h5>Product Info</h5>
+      <div>
+        <img [src]="PRODUCT_IMAGE" width="300px" height="200px" />
+        <div class="input-group" style="width: 300px">
+          <input
+            type="file"
+            accept="image/*"
+            class="form-control"
+            id="inputGroupFile04"
+            aria-describedby="inputGroupFileAddon04"
+            aria-label="Upload"
+            (change)="onSelectImage($event)"
+          />
+        </div>
+      </div>
+      <form class="row g-3 w-100" [formGroup]="productForm">
+        <div class="col-md-12 mb-2">
+          <div class="form-floating">
+            <input
+              type="text"
+              class="form-control"
+              id="inputProductname"
+              formControlName="name"
+            />
+            <label for="inputProductname" class="form-label"
+              >Product name</label
+            >
+          </div>
+        </div>
+        <div class="col-md-6 mb-2">
+          <div class="form-floating">
+            <input
+              type="text"
+              class="form-control"
+              id="inputCategory"
+              formControlName="brand"
+              placeholder="Wagyu Beff"
+            />
+            <label for="inputProductName">Brand</label>
+          </div>
+        </div>
+        <div class="col-md-6 mb-2">
+          <div class="form-floating">
+            <input
+              type="date"
+              class="form-control"
+              [min]="currentDate"
+              id="inputExpiration"
+              formControlName="expiration"
+              placeholder="Expiration"
+            />
+            <label for="inputExpiration">Expiration</label>
+          </div>
+        </div>
+        <div class="col-md-6 mb-2">
+          <div class="form-floating">
+            <textarea
+              class="form-control"
+              placeholder="Write a short description here"
+              id="inputDescription"
+              formControlName="description"
+              style="height: 100px"
+            ></textarea>
+            <label for="inputDescription">Description</label>
+          </div>
+        </div>
+        <div class="col-md-6 mb-2">
+          <div class="form-floating mb-2">
+            <textarea
+              class="form-control"
+              placeholder="Write product details here!"
+              id="inputDetails"
+              formControlName="details"
+              style="height: 100px"
+              aria-describedby="detailsHelp"
+            >
+            </textarea>
+            <label for="inputDetails">Details</label>
+
+            <div id="detailsHelp" class="form-text">
+              Put a sentence ends with a period.
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div class="container-fluid box d-flex flex-column gap-3">
+      <h5>Variations</h5>
+      <form
+        class="row g-3 w-100"
+        [formGroup]="variationForm"
+        (submit)="submitVariation()"
+      >
+        <div class="col-md-8 mb-2">
+          <div class="form-floating">
+            <input
+              class="form-control"
+              type="text"
+              id="variationname"
+              formControlName="name"
+            />
+            <label for="variationname">Variation name</label>
+          </div>
+        </div>
+
+        <div class="col-12">
+          <button
+            type="submit"
+            class="btn btn-primary b-0 btn-lg"
+            [disabled]="variationForm.invalid"
+          >
+            Save Variation
+          </button>
+        </div>
+      </form>
+
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col">Code</th>
+            <th scope="col">Name</th>
+            <th scope="col">Weight</th>
+            <th scope="col">Stocks</th>
+            <th scope="col">Cost</th>
+            <th scope="col">Price</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let variation of variations$; index as i">
+            <td>{{ variation.code }}</td>
+            <td>{{ variation.name }}</td>
+            <td>{{ variation.weight }}</td>
+            <td>{{ variation.stocks }}</td>
+            <td>{{ variation.cost }}</td>
+            <td>{{ variation.price }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="contianer d-flex justify-content-end w-100">
+      <button
+        class="btn btn-success"
+        type="button"
+        (click)="onSubmitProduct()"
+        [disabled]="productForm.invalid"
+      >
+        Submit Product
+      </button>
+    </div>
+  </div>
+</div>

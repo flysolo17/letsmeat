@@ -1,0 +1,621 @@
+<div class="container-fluid p-3 vh-100">
+  <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav nav-pills nav-fill">
+    <li [ngbNavItem]="1">
+      <button ngbNavLink>
+        PENDING
+        <span class="badge bg-danger">{{
+          filterTransactionByStatus("PENDING").length
+        }}</span>
+      </button>
+      <ng-template ngbNavContent>
+        <div class="box">
+          <div class="d-flex align-items-center justify-content-between">
+            <h5 class="text-primary fw-bold">PEDING</h5>
+
+            <input
+              type="text"
+              class="search-input"
+              placeholder="Search..."
+              style="width: 400px"
+              [(ngModel)]="searchText"
+              (input)="search()"
+              id="print-section"
+            />
+          </div>
+          <table class="table table-borderless table-hover">
+            <thead>
+              <tr>
+                <th scope="col">Order ID</th>
+                <th scope="col">Order Type</th>
+                <th scope="col">Items</th>
+                <th scope="col">Payment</th>
+                <th scope="col">Status</th>
+                <th scope="col">Order Date</th>
+                <th scope="col text-end">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                *ngFor="let transaction of filterTransactionByStatus('PENDING')"
+              >
+                <th scope="row">{{ transaction.id }}</th>
+                <td>{{ transaction.type }}</td>
+                <td>{{ transaction.items.length }}</td>
+                <td>
+                  {{
+                    transaction.payment.total.toLocaleString("en-us", {
+                      style: "currency",
+                      currency: "PHP"
+                    })
+                  }}
+                  - {{ transaction.payment.type }}
+                  <span
+                    class="badge"
+                    [style.backgroundColor]="
+                      transaction.payment.status === 'PAID' ? 'green' : 'yellow'
+                    "
+                    [style.color]="
+                      transaction.payment.status === 'PAID' ? 'white' : 'black'
+                    "
+                    >{{ transaction.payment.status }}</span
+                  >
+                </td>
+                <td>
+                  <span
+                    class="badge"
+                    [style.backgroundColor]="
+                      transaction.status === 'PENDING' ? 'yellow' : 'green'
+                    "
+                    [style.color]="
+                      transaction.status === 'PENDING' ? 'black' : 'white'
+                    "
+                    >{{ transaction.status }}</span
+                  >
+                </td>
+                <td>{{ transaction.transactionDate.toDateString() }}</td>
+                <td>
+                  <div class="d-flex gap-2 w-100 justify-content-end">
+                    <button
+                      class="btn btn-danger"
+                      (click)="openUpdateStatusDialog(transaction, 7)"
+                    >
+                      <i class="fa-solid fa-xmark me-3"></i>Decline
+                    </button>
+                    <button
+                      class="btn btn-success"
+                      (click)="acceptTransaction(transaction)"
+                    >
+                      <i class="fa-solid fa-check me-3"></i>
+                      Accept
+                    </button>
+
+                    <button
+                      class="btn btn-outline-secondary"
+                      (click)="openTransaction(transaction)"
+                    >
+                      <i class="fa-solid fa-eye"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </ng-template>
+    </li>
+    <li [ngbNavItem]="2">
+      <button ngbNavLink>
+        ACCEPTED
+        <span class="badge bg-danger">{{
+          filterTransactionByStatus("ACCEPTED").length
+        }}</span>
+      </button>
+      <ng-template ngbNavContent>
+        <div class="box">
+          <div class="d-flex align-items-center justify-content-between">
+            <h5 class="text-primary fw-bold">ACCEPTED</h5>
+
+            <input
+              type="text"
+              class="search-input"
+              placeholder="Search..."
+              [(ngModel)]="searchText"
+              (input)="search()"
+              style="width: 400px"
+              id="print-section"
+            />
+          </div>
+          <table class="table table-borderless table-hover">
+            <thead>
+              <tr>
+                <th scope="col">Order ID</th>
+                <th scope="col">Order Type</th>
+                <th scope="col">Items</th>
+                <th scope="col">Payment</th>
+                <th scope="col">Status</th>
+                <th scope="col">Order Date</th>
+                <th scope="col text-end">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                *ngFor="
+                  let transaction of filterTransactionByStatus('ACCEPTED')
+                "
+              >
+                <th scope="row">{{ transaction.id }}</th>
+                <td>{{ transaction.type }}</td>
+                <td>{{ transaction.items.length }}</td>
+                <td>
+                  {{
+                    transaction.payment.total.toLocaleString("en-us", {
+                      style: "currency",
+                      currency: "PHP"
+                    })
+                  }}
+                  - {{ transaction.payment.type }}
+                  <span
+                    class="badge"
+                    [style.backgroundColor]="
+                      transaction.payment.status === 'PAID' ? 'green' : 'yellow'
+                    "
+                    [style.color]="
+                      transaction.payment.status === 'PAID' ? 'white' : 'black'
+                    "
+                    >{{ transaction.payment.status }}</span
+                  >
+                </td>
+                <td>
+                  <span
+                    class="badge"
+                    [style.backgroundColor]="
+                      transaction.status === 'PENDING' ? 'yellow' : 'green'
+                    "
+                    [style.color]="
+                      transaction.status === 'PENDING' ? 'black' : 'white'
+                    "
+                    >{{ transaction.status }}</span
+                  >
+                </td>
+                <td>{{ transaction.transactionDate.toDateString() }}</td>
+                <td>
+                  <div class="d-flex gap-2 w-100 justify-content-end">
+                    <button
+                      class="btn btn-danger"
+                      *ngIf="transaction.type === 'DELIVERY'"
+                      (click)="openUpdateStatusDialog(transaction, 2)"
+                    >
+                      <i class="fa-solid fa-truck me-3"></i>Ready To Ship
+                    </button>
+                    <button
+                      class="btn btn-success"
+                      *ngIf="transaction.type === 'PICK_UP'"
+                      (click)="openUpdateStatusDialog(transaction, 3)"
+                    >
+                      <i class="fa-solid fa-check me-3"></i>
+                      Ready To Pick Up
+                    </button>
+
+                    <button
+                      class="btn btn-outline-secondary"
+                      (click)="openTransaction(transaction)"
+                    >
+                      <i class="fa-solid fa-eye"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </ng-template>
+    </li>
+    <li [ngbNavItem]="3">
+      <button ngbNavLink>
+        TO SHIP
+        <span class="badge bg-danger">{{
+          filterTransactionByStatus("TO_SHIP").length
+        }}</span>
+      </button>
+      <ng-template ngbNavContent>
+        <div class="box">
+          <div class="d-flex align-items-center justify-content-between">
+            <h5 class="text-primary fw-bold">To SHIP</h5>
+
+            <input
+              type="text"
+              class="search-input"
+              placeholder="Search..."
+              [(ngModel)]="searchText"
+              (input)="search()"
+              style="width: 400px"
+              id="print-section"
+            />
+          </div>
+
+          <table class="table table-borderless table-hover">
+            <thead>
+              <tr>
+                <th scope="col">Order ID</th>
+                <th scope="col">Order Type</th>
+                <th scope="col">Items</th>
+                <th scope="col">Payment</th>
+                <th scope="col">Status</th>
+                <th scope="col">Order Date</th>
+                <th scope="col text-end">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                *ngFor="let transaction of filterTransactionByStatus('TO_SHIP')"
+              >
+                <th scope="row">{{ transaction.id }}</th>
+                <td>{{ transaction.type }}</td>
+                <td>{{ transaction.items.length }}</td>
+                <td>
+                  {{
+                    transaction.payment.total.toLocaleString("en-us", {
+                      style: "currency",
+                      currency: "PHP"
+                    })
+                  }}
+                  - {{ transaction.payment.type }}
+                  <span
+                    class="badge"
+                    [style.backgroundColor]="
+                      transaction.payment.status === 'PAID' ? 'green' : 'yellow'
+                    "
+                    [style.color]="
+                      transaction.payment.status === 'PAID' ? 'white' : 'black'
+                    "
+                    >{{ transaction.payment.status }}</span
+                  >
+                </td>
+                <td>
+                  <span
+                    class="badge"
+                    [style.backgroundColor]="
+                      transaction.status === 'PENDING' ? 'yellow' : 'green'
+                    "
+                    [style.color]="
+                      transaction.status === 'PENDING' ? 'black' : 'white'
+                    "
+                    >{{ transaction.status }}</span
+                  >
+                </td>
+                <td>{{ transaction.transactionDate.toDateString() }}</td>
+                <td>
+                  <div class="d-flex gap-2 w-100 justify-content-end">
+                    <button
+                      class="btn btn-outline-secondary btn-sm"
+                      *ngIf="transaction.driverID === ''"
+                      (click)="openAddDriverDialog(transaction)"
+                    >
+                      <i class="fa-solid fa-user me-3"></i>ADD DRIVER
+                    </button>
+
+                    <button
+                      class="btn btn-success btn-sm"
+                      (click)="openUpdateStatusDialog(transaction, 5)"
+                      [disabled]="transaction.driverID === ''"
+                    >
+                      <i class="fa-solid fa-truck me-3"></i>Deliver Order
+                    </button>
+
+                    <button
+                      class="btn btn-outline-secondary"
+                      (click)="openTransaction(transaction)"
+                    >
+                      <i class="fa-solid fa-eye"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </ng-template>
+    </li>
+
+    <li [ngbNavItem]="4">
+      <button ngbNavLink>
+        TO PICK UP
+        <span class="badge bg-danger">{{
+          filterTransactionByStatus("TO_PICK_UP").length
+        }}</span>
+      </button>
+      <ng-template ngbNavContent>
+        <div class="box">
+          <div class="d-flex align-items-center justify-content-between">
+            <h5 class="text-primary fw-bold">TO PICK UP</h5>
+
+            <input
+              type="text"
+              class="search-input"
+              placeholder="Search..."
+              [(ngModel)]="searchText"
+              (input)="search()"
+              style="width: 400px"
+              id="print-section"
+            />
+          </div>
+          <table class="table table-borderless table-hover">
+            <thead>
+              <tr>
+                <th scope="col">Order ID</th>
+                <th scope="col">Order Type</th>
+                <th scope="col">Items</th>
+                <th scope="col">Payment</th>
+                <th scope="col">Status</th>
+                <th scope="col">Order Date</th>
+                <th scope="col text-end">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                *ngFor="
+                  let transaction of filterTransactionByStatus('TO_PICK_UP')
+                "
+              >
+                <th scope="row">{{ transaction.id }}</th>
+                <td>{{ transaction.type }}</td>
+                <td>{{ transaction.items.length }}</td>
+                <td>
+                  {{
+                    transaction.payment.total.toLocaleString("en-us", {
+                      style: "currency",
+                      currency: "PHP"
+                    })
+                  }}
+                  - {{ transaction.payment.type }}
+                  <span
+                    class="badge"
+                    [style.backgroundColor]="
+                      transaction.payment.status === 'PAID' ? 'green' : 'yellow'
+                    "
+                    [style.color]="
+                      transaction.payment.status === 'PAID' ? 'white' : 'black'
+                    "
+                    >{{ transaction.payment.status }}</span
+                  >
+                </td>
+                <td>
+                  <span
+                    class="badge"
+                    [style.backgroundColor]="
+                      transaction.status === 'PENDING' ? 'yellow' : 'green'
+                    "
+                    [style.color]="
+                      transaction.status === 'PENDING' ? 'black' : 'white'
+                    "
+                    >{{ transaction.status }}</span
+                  >
+                </td>
+                <td>{{ transaction.transactionDate.toDateString() }}</td>
+                <td>
+                  <div class="d-flex gap-2 w-100 justify-content-end">
+                    <button
+                      class="btn btn-outline-secondary btn-sm"
+                      (click)="addPayment(transaction)"
+                      *ngIf="transaction.payment.status === 'UNPAID'"
+                    >
+                      <i class="fa-solid fa-credit-card me-2"> </i>ADD PAYMENT
+                    </button>
+
+                    <button
+                      class="btn btn-success btn-sm"
+                      [disabled]="transaction.payment.status === 'UNPAID'"
+                      (click)="openUpdateStatusDialog(transaction, 6)"
+                    >
+                      <i class="fa-solid fa-truck me-3"></i>MARK AS COMPLETE
+                    </button>
+
+                    <button
+                      class="btn btn-outline-secondary"
+                      (click)="openTransaction(transaction)"
+                    >
+                      <i class="fa-solid fa-eye"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </ng-template>
+    </li>
+
+    <li [ngbNavItem]="5">
+      <button ngbNavLink>
+        TO RECIEVE
+        <span class="badge bg-danger">{{
+          filterTransactionByStatus("TO_RECEIVE").length
+        }}</span>
+      </button>
+      <ng-template ngbNavContent>
+        <div class="box">
+          <div class="d-flex align-items-center justify-content-between">
+            <h5 class="text-primary fw-bold">TO RECEIVE</h5>
+
+            <input
+              type="text"
+              class="search-input"
+              placeholder="Search..."
+              style="width: 400px"
+              [(ngModel)]="searchText"
+              (input)="search()"
+              id="print-section"
+            />
+          </div>
+          <table class="table table-borderless table-hover">
+            <thead>
+              <tr>
+                <th scope="col">Order ID</th>
+                <th scope="col">Order Type</th>
+                <th scope="col">Items</th>
+                <th scope="col">Payment</th>
+                <th scope="col">Status</th>
+                <th scope="col">Order Date</th>
+                <th scope="col text-end">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                *ngFor="
+                  let transaction of filterTransactionByStatus('TO_RECEIVE')
+                "
+              >
+                <th scope="row">{{ transaction.id }}</th>
+                <td>{{ transaction.type }}</td>
+                <td>{{ transaction.items.length }}</td>
+                <td>
+                  {{
+                    transaction.payment.total.toLocaleString("en-us", {
+                      style: "currency",
+                      currency: "PHP"
+                    })
+                  }}
+                  - {{ transaction.payment.type }}
+                  <span
+                    class="badge"
+                    [style.backgroundColor]="
+                      transaction.payment.status === 'PAID' ? 'green' : 'yellow'
+                    "
+                    [style.color]="
+                      transaction.payment.status === 'PAID' ? 'white' : 'black'
+                    "
+                    >{{ transaction.payment.status }}</span
+                  >
+                </td>
+                <td>
+                  <span
+                    class="badge"
+                    [style.backgroundColor]="
+                      transaction.status === 'PENDING' ? 'yellow' : 'green'
+                    "
+                    [style.color]="
+                      transaction.status === 'PENDING' ? 'black' : 'white'
+                    "
+                    >{{ transaction.status }}</span
+                  >
+                </td>
+                <td>{{ transaction.transactionDate.toDateString() }}</td>
+                <td>
+                  <div class="d-flex gap-2 w-100 justify-content-end">
+                    <button
+                      class="btn btn-outline-secondary btn-sm"
+                      (click)="addPayment(transaction)"
+                      *ngIf="transaction.payment.status === 'UNPAID'"
+                    >
+                      <i class="fa-solid fa-credit-card me-2"> </i>ADD PAYMENT
+                    </button>
+
+                    <button
+                      class="btn btn-success btn-sm"
+                      [disabled]="transaction.payment.status === 'UNPAID'"
+                      (click)="openUpdateStatusDialog(transaction, 6)"
+                    >
+                      <i class="fa-solid fa-truck me-3"></i>MARK AS COMPLETE
+                    </button>
+
+                    <button
+                      class="btn btn-outline-secondary"
+                      (click)="openTransaction(transaction)"
+                    >
+                      <i class="fa-solid fa-eye"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table></div
+      ></ng-template>
+    </li>
+
+    <li [ngbNavItem]="6">
+      <button ngbNavLink>COMPLETED</button>
+      <ng-template ngbNavContent>
+        <div class="box">
+          <div class="d-flex align-items-center justify-content-between">
+            <h5 class="text-primary fw-bold">COMPLETED</h5>
+
+            <input
+              type="text"
+              class="search-input"
+              placeholder="Search..."
+              style="width: 400px"
+              [(ngModel)]="searchText"
+              (input)="search()"
+              id="print-section"
+            />
+          </div>
+          <table class="table table-borderless table-hover h-100">
+            <thead>
+              <tr>
+                <th scope="col">Order ID</th>
+                <th scope="col">Order Type</th>
+                <th scope="col">Items</th>
+                <th scope="col">Payment</th>
+                <th scope="col">Status</th>
+                <th scope="col">Order Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                *ngFor="
+                  let transaction of filterTransactionByStatus('COMPLETED')
+                    | slice
+                      : (currentPage - 1) * itemsPerPage
+                      : currentPage * itemsPerPage
+                "
+                (click)="openTransaction(transaction)"
+              >
+                <th scope="row">{{ transaction.id }}</th>
+                <td>{{ transaction.type }}</td>
+                <td>{{ transaction.items.length }}</td>
+                <td>
+                  {{
+                    transaction.payment.total.toLocaleString("en-us", {
+                      style: "currency",
+                      currency: "PHP"
+                    })
+                  }}
+                  - {{ transaction.payment.type }}
+                  <span
+                    class="badge"
+                    [style.backgroundColor]="
+                      transaction.payment.status === 'PAID' ? 'green' : 'yellow'
+                    "
+                    [style.color]="
+                      transaction.payment.status === 'PAID' ? 'white' : 'black'
+                    "
+                    >{{ transaction.payment.status }}</span
+                  >
+                </td>
+                <td>
+                  <span
+                    class="badge"
+                    [style.backgroundColor]="
+                      transaction.status === 'PENDING' ? 'yellow' : 'green'
+                    "
+                    [style.color]="
+                      transaction.status === 'PENDING' ? 'black' : 'white'
+                    "
+                    >{{ transaction.status }}</span
+                  >
+                </td>
+                <td>{{ transaction.transactionDate.toDateString() }}</td>
+              </tr>
+            </tbody>
+          </table>
+          <ngb-pagination
+            [(page)]="currentPage"
+            [pageSize]="itemsPerPage"
+            [collectionSize]="filterTransactionByStatus('COMPLETED').length"
+          ></ngb-pagination></div
+      ></ng-template>
+    </li>
+  </ul>
+
+  <div [ngbNavOutlet]="nav" class="mt-2"></div>
+</div>

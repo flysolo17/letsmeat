@@ -1,0 +1,159 @@
+<div class="container-fluid vh-100">
+  <div class="d-flex gap-3 p-3 m-3 align-items-center">
+    <button class="btn btn-outline-secondary btn-sm" (click)="location.back()">
+      <i class="fa-solid fa-arrow-left"></i>
+    </button>
+    <h5>ORDER ID : {{ transaction.id }}</h5>
+  </div>
+
+  <div class="row m-3">
+    <div class="col-3">
+      <div class="box">
+        <h5>Items</h5>
+        <ul class="list-group list-group-flush flex-grow-1">
+          <li
+            class="list-group-item d-flex justify-content-between align-items-start"
+            *ngFor="let items of transaction.items"
+          >
+            <img [src]="items.image" width="50px" height="50px" />
+            <div class="ms-2 me-auto">
+              <div class="fw-bold">{{ items.name }}</div>
+              x {{ items.quantity }}
+            </div>
+            <span
+              >{{
+                items.subtotal.toLocaleString("en-us", {
+                  style: "currency",
+                  currency: "PHP"
+                })
+              }}
+              <br />
+              <small class="text-danger" *ngIf="items.options !== null"
+                >{{ items.options.discount }} % discount</small
+              ></span
+            >
+          </li>
+        </ul>
+        <hr />
+        <span class="text-success">
+          ORDER TOTAL :
+          {{
+            computeSubtotal(transaction.items).toLocaleString("en-us", {
+              style: "currency",
+              currency: "PHP"
+            })
+          }}</span
+        >
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="box">
+        <div class="row">
+          <div class="col-6">
+            <div class="d-flex flex-column">
+              <h5>Order Summary</h5>
+              <p class="fst-normal">
+                Transaction Type : <b>{{ transaction.type }}</b>
+              </p>
+              <p class="fst-normal">
+                Status : <b>{{ transaction.status }}</b>
+              </p>
+              <p class="fst-normal">
+                Subtotal :
+                <b class="text-success">
+                  {{ computeSubtotal(transaction.items) }}</b
+                >
+              </p>
+              <p class="fst-normal">
+                Order Weight :
+                <b> {{ transaction.shipping?.weight ?? 0 }} kg</b>
+              </p>
+              <p class="fst-normal">
+                Shipping Fee :
+                <b>{{
+                  (transaction.shipping?.total ?? 0).toLocaleString("en-us", {
+                    style: "currency",
+                    currency: "PHP"
+                  })
+                }}</b>
+              </p>
+              <p class="fw-semibold">
+                Total :
+                <b class="text-success">
+                  {{
+                    transaction.payment.total.toLocaleString("en-us", {
+                      style: "currency",
+                      currency: "PHP"
+                    })
+                  }}
+                </b>
+              </p>
+            </div>
+          </div>
+          <div class="col-6">
+            <h5>Payment Details</h5>
+            <p class="fst-normal">
+              Payment Type :
+              {{ transaction.payment.type }}
+            </p>
+            <p>
+              Status :
+              <span
+                class="badge"
+                [style.backgroundColor]="
+                  transaction.payment.status === 'PAID' ? 'green' : 'yellow'
+                "
+                [style.color]="
+                  transaction.payment.status === 'PAID' ? 'white' : 'black'
+                "
+                >{{ transaction.payment.status }}</span
+              >
+            </p>
+            <p class="fst-normal">
+              Payment Link :
+              <a
+                (click)="openLink(transaction.payment.receipt)"
+                *ngIf="transaction.payment.receipt !== ''"
+                >View Payment</a
+              >
+            </p>
+          </div>
+          <div class="col-12">
+            <hr />
+          </div>
+          <div class="col-6">
+            <h5>Driver Info</h5>
+
+            <p class="fst-normal">
+              Driver name :<b>{{ driver$?.name ?? "NA" }}</b>
+            </p>
+            <p class="fst-normal">
+              Contact : <b>{{ driver$?.phone ?? "NA" }}</b>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-3">
+      <div class="box">
+        <h5>Track Order</h5>
+        <ul class="list-group">
+          <li
+            class="list-group-item"
+            *ngFor="let details of transaction.details.reverse()"
+          >
+            <div class="d-flex w-100 justify-content-between">
+              <h6 class="mb-1">{{ details.title }}</h6>
+              <small class="text-body-secondary">{{
+                details.createdAt.toLocaleDateString()
+              }}</small>
+            </div>
+            <small class="text-body-secondary"
+              >{{ details.description }}.</small
+            >
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

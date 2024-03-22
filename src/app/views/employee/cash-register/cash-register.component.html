@@ -1,0 +1,124 @@
+<div class="container-fluid h-100 p-3">
+  <div class="d-flex gap-3 h-100">
+    <div class="d-flex flex-column w-75 gap-3 overflow-auto">
+      <div class="d-flex gap-3" style="flex-wrap: wrap">
+        <div class="box">
+          <h5>
+            {{
+              totalCashRegisterToday.toLocaleString("en-us", {
+                style: "currency",
+                currency: "PHP"
+              })
+            }}
+          </h5>
+          <span class="text-secondary">Starting Cash Today</span>
+        </div>
+        <div class="box">
+          <h5>
+            {{
+              totalExpenses.toLocaleString("en-us", {
+                style: "currency",
+                currency: "PHP"
+              })
+            }}
+          </h5>
+          <span class="text-secondary">Expenses Today</span>
+        </div>
+        <div class="box">
+          <h5>
+            {{
+              totalCash.toLocaleString("en-us", {
+                style: "currency",
+                currency: "PHP"
+              })
+            }}
+          </h5>
+          <span class="text-secondary">Sales Today</span>
+        </div>
+        <div class="box">
+          <h5>
+            {{
+              totalSales.toLocaleString("en-us", {
+                style: "currency",
+                currency: "PHP"
+              })
+            }}
+          </h5>
+          <span class="text-secondary">Total</span>
+        </div>
+      </div>
+
+      <div class="box">
+        <div class="d-flex align-items-center justify-content-between">
+          <h5>Starting Cash</h5>
+          <div class="d-flex gap-3">
+            <button class="btn btn-outline-dark">
+              <i class="fa-solid fa-print me-3"></i>
+              Generate Report
+            </button>
+            <button class="btn btn-dark" (click)="addStartingCash()">
+              <i class="fa-solid fa-plus btn-sm me-3"></i>
+              Add Cash
+            </button>
+          </div>
+        </div>
+        <table class="table table-hover table-borderless">
+          <thead>
+            <tr>
+              <th scope="col">Cash</th>
+              <th scope="col">Time</th>
+              <th scope="col">Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let cash of cashRegisters$">
+              <td>
+                {{
+                  cash.amount.toLocaleString("en-us", {
+                    style: "currency",
+                    currency: "PHP"
+                  })
+                }}
+              </td>
+              <td>{{ cash.dateIssued.toLocaleTimeString() }}</td>
+              <td>{{ cash.dateIssued.toLocaleDateString() }}3</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="flex-grow-1">
+      <div class="box overflow-auto">
+        <div class="d-flex align-items-center justify-content-between p-3">
+          <h5>Expenses</h5>
+          <button class="btn btn-dark" (click)="addExpenses()">
+            <i class="fa-solid fa-plus btn-sm"></i>
+          </button>
+        </div>
+
+        <ul class="list-group">
+          <li class="list-group-item" *ngFor="let details of expenses$">
+            <div class="d-flex flex-column">
+              <div class="d-flex w-100 justify-content-between">
+                <h6 class="mb-1">
+                  {{
+                    details.cash.toLocaleString("en-us", {
+                      style: "currency",
+                      currency: "PHP"
+                    })
+                  }}
+                </h6>
+                <small class="text-body-secondary">{{
+                  details.createdAt.toLocaleDateString()
+                }}</small>
+              </div>
+              <small class="text-body-secondary"
+                >{{ details.description }}.</small
+              >
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

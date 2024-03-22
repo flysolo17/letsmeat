@@ -1,0 +1,25 @@
+.box-1 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: start;
+  padding: 1rem;
+}
+
+.box-2 {
+  padding: 1rem;
+
+  background-color: white;
+  border-radius: 10px;
+}
+
+.modal-body {
+  background-color: var(--bg-color);
+}
+
+.status {
+  display: flex;
+  gap: 1rem;
+  background-color: var(--bg-color);
+  border-radius: 10px;
+}

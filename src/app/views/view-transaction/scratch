@@ -1,0 +1,134 @@
+<div class="modal-header bg-success text-white">
+  <h5 class="modal-title">ORDER ID : {{ transaction.id }}</h5>
+  <button
+    type="button"
+    class="btn-close"
+    aria-label="Close"
+    (click)="activeModal.dismiss('Cross click')"
+  ></button>
+</div>
+<div class="modal-body">
+  <div class="container-fluid">
+    <!-- transaction-details.component.html -->
+    <div class="d-flex gap-3 h-100">
+      <div class="box box-1">
+        <h5>Items</h5>
+        <ul class="list-group list-group-flush flex-grow-1">
+          <li
+            class="list-group-item d-flex justify-content-between align-items-start"
+            *ngFor="let items of transaction.items"
+          >
+            <img [src]="items.image" width="50px" height="50px" />
+            <div class="ms-2 me-auto">
+              <div class="fw-bold">{{ items.name }}</div>
+              x {{ items.quantity }}
+            </div>
+            <span
+              >{{
+                items.subtotal.toLocaleString("en-us", {
+                  style: "currency",
+                  currency: "PHP"
+                })
+              }}
+              <br />
+              <small class="text-danger" *ngIf="items.options !== null"
+                >{{ items.options.discount }} % discount</small
+              ></span
+            >
+          </li>
+        </ul>
+        <hr />
+        <span class="text-success">
+          ORDER TOTAL :
+          {{
+            computeSubtotal(transaction.items).toLocaleString("en-us", {
+              style: "currency",
+              currency: "PHP"
+            })
+          }}</span
+        >
+      </div>
+
+      <div class="box box-2">
+        <div class="order-summary">
+          <h5>Order Summary</h5>
+          <span class="fw-bold">Order ID : {{ transaction.id }}</span>
+          <p class="text-muted font-size-14 mb-0">
+            Order date: {{ transaction.transactionDate.toLocaleDateString() }}
+          </p>
+
+          <p class="text-muted font-size-14 mb-0">
+            Order Type: {{ transaction.type }}
+          </p>
+          <p class="text-muted font-size-14 mb-0">
+            Status: {{ transaction.status }}
+          </p>
+          <p class="text-muted font-size-14 mb-0">
+            Payment Method : {{ transaction.payment.type }}
+          </p>
+
+          <p class="text-muted font-size-14 mb-0">
+            Payment Date :
+            <span *ngIf="transaction.payment.status == 'PAID'">{{
+              transaction.payment.updatedAt.toDateString()
+            }}</span>
+            <span
+              *ngIf="transaction.payment.status == 'UNPAID'"
+              class="badge bg-danger"
+              >UNPAID
+            </span>
+          </p>
+        </div>
+        <hr />
+        <div class="order-details">
+          <h5>Order Details</h5>
+          <span class="fw-bold">Order ID : {{ transaction.id }}</span>
+          <p class="text-muted font-size-14 mb-0">
+            Order date: {{ transaction.transactionDate.toLocaleDateString() }}
+          </p>
+
+          <p class="text-muted font-size-14 mb-0">
+            Order Type: {{ transaction.type }}
+          </p>
+          <p class="text-muted font-size-14 mb-0">
+            Status: {{ transaction.status }}
+          </p>
+          <p class="text-muted font-size-14 mb-0">
+            Payment Method : {{ transaction.payment.type }}
+          </p>
+
+          <p class="text-muted font-size-14 mb-0">
+            Payment Date :
+            <span *ngIf="transaction.payment.status == 'PAID'">{{
+              transaction.payment.updatedAt.toDateString()
+            }}</span>
+            <span
+              *ngIf="transaction.payment.status == 'UNPAID'"
+              class="badge bg-danger"
+              >UNPAID
+            </span>
+          </p>
+        </div>
+      </div>
+      <div class="box box-3">
+        <h5>Track Order</h5>
+        <ul class="list-group">
+          <li
+            class="list-group-item"
+            *ngFor="let details of transaction.details.reverse()"
+          >
+            <div class="d-flex w-100 justify-content-between">
+              <h6 class="mb-1">{{ details.title }}</h6>
+              <small class="text-body-secondary">{{
+                details.createdAt.toLocaleDateString()
+              }}</small>
+            </div>
+            <small class="text-body-secondary"
+              >{{ details.description }}.</small
+            >
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

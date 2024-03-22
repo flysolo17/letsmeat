@@ -1,0 +1,97 @@
+<div class="h-100">
+  <div class="d-flex w-100 h-100">
+    <div class="w-75 p-3 d-flex flex-column gap-3">
+      <div class="row">
+        <div class="col">
+          <div class="box box-2">
+            <img
+              src="../../../../assets/images/sales.png"
+              height="80px"
+              width="80px"
+            />
+            <div>
+              <h5 class="text-warning">
+                {{
+                  computeTotalSales().toLocaleString("en-us", {
+                    style: "currency",
+                    currency: "PHP"
+                  })
+                }}
+              </h5>
+              <p class="fw-light">Sales</p>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="box box-2">
+            <img
+              src="../../../../assets/images/expenses.png"
+              height="80px"
+              width="80px"
+            />
+            <div>
+              <h5 class="text-danger">{{ 0 }}</h5>
+              <p class="fw-light">Expenses</p>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="box box-2">
+            <img
+              src="../../../../assets/images/revenue.png"
+              height="80px"
+              width="80px"
+            />
+            <div>
+              <h5 class="text-success">
+                {{
+                  computeTotalSales().toLocaleString("en-us", {
+                    style: "currency",
+                    currency: "PHP"
+                  })
+                }}
+              </h5>
+              <p class="fw-light">Revenue</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="box flex-grow-1">
+        <apx-chart
+          [series]="chartOptions.series ?? []"
+          [chart]="chartOptions.chart ?? {      height: '100%',
+          type: 'line',}"
+          [xaxis]="chartOptions.xaxis ?? { categories: [] }"
+          [title]="chartOptions.title ?? { text: 'Sales' }"
+        ></apx-chart>
+      </div>
+    </div>
+    <div class="w-25 h-100 p-3">
+      <div class="box p-0 h-100 overflow-y-scroll">
+        <div class="shadow sticky-top p-3 bg-white">Track Orders</div>
+        <ul class="list-group">
+          <li class="list-group-item" *ngFor="let details of details$">
+            <div class="d-flex flex-column">
+              <div class="d-flex w-100 justify-content-between">
+                <h6 class="mb-1">{{ details.details.title }}</h6>
+                <small class="text-body-secondary">{{
+                  details.details.createdAt.toLocaleDateString()
+                }}</small>
+              </div>
+              <small class="text-body-secondary"
+                >{{ details.details.description }}.</small
+              >
+              <div class="text-end">
+                <a
+                  class="btn btn-light btn-sm"
+                  (click)="newTab(details.transaction)"
+                  >View Details</a
+                >
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

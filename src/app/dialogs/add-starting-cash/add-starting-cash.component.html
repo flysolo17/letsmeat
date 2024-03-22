@@ -1,0 +1,33 @@
+<div class="modal-header bg-dark">
+  <h4 class="modal-title text-white">Add Starting Cash</h4>
+  <button
+    type="button"
+    class="btn-close bg-white"
+    aria-label="Close"
+    (click)="activeModal.dismiss(false)"
+  ></button>
+</div>
+<div class="modal-body">
+  <div class="form-floating mb-3">
+    <input
+      class="form-control"
+      type="number"
+      [(ngModel)]="cashReceived$"
+      (keyup)="onPaymentReceivedChange($event)"
+    />
+    <label>Add Cash</label>
+  </div>
+
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-outline-dark"
+      (click)="activeModal.close(false)"
+    >
+      Cancel
+    </button>
+    <button type="submit" class="btn btn-dark" (click)="submit()">
+      Submit
+    </button>
+  </div>
+</div>

@@ -1,0 +1,82 @@
+<div class="container-fluid h-100">
+  <div class="d-flex gap-2 h-100">
+    <div class="w-75 btn-danger h-100">
+      <div class="d-flex flex-column gap-2 p-2 h-100">
+        <div class="box">
+          <ul class="nav nav-pills">
+            <li
+              class="nav-item"
+              *ngFor="let category of categories$; let i = index"
+              (click)="filterByBrand(category)"
+            >
+              <a
+                class="nav-link"
+                [class.active]="i === activeTab"
+                (click)="selectTab(i)"
+              >
+                {{ category.toUpperCase() }}
+              </a>
+            </li>
+          </ul>
+        </div>
+        <div class="box bg-white h-100">
+          <div class="d-flex p-3 align-items-center justify-content-between">
+            <h5 class="">Hi , {{ users$?.name }}</h5>
+            <div class="d-flex gap-2">
+              <input
+                type="text"
+                class="search-input"
+                placeholder="Search..."
+                #searchBar
+                (keyup)="onSearch(searchBar.value)"
+              />
+              <button class="btn btn-success">
+                <i class="fa-solid fa-magnifying-glass"></i>
+              </button>
+            </div>
+          </div>
+          <div class="row row-cols-5 p-2">
+            <div class="col" *ngFor="let product of products$">
+              <div class="product-card" (click)="addOptions(product)">
+                <img
+                  [src]="product.image"
+                  width="100%"
+                  height="150px"
+                  style="border-radius: 10px"
+                />
+                <span class="prouct-name fw-bold">{{ product.name }}</span>
+                <h5 class="text-success">
+                  {{ product.price.toLocaleString("en-us", { style: "currency",
+                  currency: "PHP" }) }}
+                </h5>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="w-25">
+      <div class="box bg-white h-100">
+        <ul
+          class="list-group list-group-flush"
+          *ngFor="let items of orderItems$"
+        >
+          <li
+            class="list-group-item d-flex justify-content-between align-items-start"
+          >
+            <div class="ms-2 me-auto">
+              <div class="fw-bold">
+                {{ items.options?.name }} {{ items.name }}
+              </div>
+              Discount : {{ items.options?.discount ?? 0 }}
+            </div>
+            <span class="fw-bold text-success"
+              >{{ items.subtotal.toLocaleString("en-us", { style: "currency",
+              currency: "PHP" }) }}</span
+            >
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

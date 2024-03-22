@@ -1,0 +1,60 @@
+<div
+  class="container-fluid vh-100 align-items-center justify-content-center p-3"
+>
+  <div class="box">
+    <div class="d-flex align-items-center justify-content-between">
+      <h5>Employee</h5>
+      <button class="btn btn-primary" (click)="createStaff()">
+        Create Employee
+      </button>
+    </div>
+    <div class="container-fluid flex-grow-1 overflow-auto">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col">Profile</th>
+            <th scope="col">Name</th>
+            <th scope="col">Phone</th>
+            <th scope="col">Email</th>
+            <th scope="col">Employment Type</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of users$">
+            <td>
+              <img
+                class="profile-img"
+                *ngIf="user.profile !== ''; else placeholder"
+                [src]="user.profile"
+                width="40px"
+                height="40px"
+              />
+
+              <ng-template #placeholder>
+                <img
+                  class="profile-img"
+                  src="../../../../assets/images/profile.jpg"
+                  alt="Placeholder"
+                  width="40px"
+                  height="40px"
+                />
+              </ng-template>
+            </td>
+            <td>
+              <span class="fw-bold">{{ user.name }}</span>
+            </td>
+            <td>
+              <span>{{ user.phone }}</span>
+            </td>
+            <td>
+              <span>{{ user.email }}</span>
+            </td>
+            <td>
+              <span>{{ user.type }}</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

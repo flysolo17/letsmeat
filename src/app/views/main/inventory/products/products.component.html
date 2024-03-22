@@ -1,0 +1,171 @@
+<!-- 
+
+ -->
+
+<div
+  class="container-fluid p-3 h-100 d-flex align-items-center justify-content-center"
+>
+  <div class="box">
+    <h5>Products</h5>
+    <div class="d-flex gap-2 align-items-center justify-content-between">
+      <div class="input-group">
+        <input
+          type="text"
+          class="search-input"
+          placeholder="Search..."
+          [(ngModel)]="searchText"
+          (input)="search()"
+        />
+      </div>
+      <button
+        class="btn btn-lg btn-outline-success"
+        style="width: 250px"
+        [routerLink]="['/main/inventory/create']"
+      >
+        Download
+      </button>
+      <button
+        class="btn btn-lg btn-success"
+        style="width: 250px"
+        [routerLink]="['/main/inventory/create']"
+      >
+        Add Products
+      </button>
+    </div>
+    <div class="table-responsive flex-grow-1">
+      <div class="flex-grow-1">
+        <table class="table table-hover table-borderless">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Brand</th>
+              <th>Price</th>
+              <th>Total Stocks</th>
+              <th>Status</th>
+              <th>Expiration</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              *ngFor="
+                let product of filteredProducts$
+                  | slice
+                    : (currentPage - 1) * itemsPerPage
+                    : currentPage * itemsPerPage
+              "
+            >
+              <td>
+                <img
+                  [src]="product.image"
+                  alt="Product image"
+                  width="48px"
+                  height="48px"
+                />
+                <span class="fw-bold">{{ product.name }}</span>
+              </td>
+              <td>
+                <span>{{ product.brand }}</span>
+              </td>
+
+              <td>
+                {{
+                  product.price.toLocaleString("en-us", {
+                    style: "currency",
+                    currency: "PHP"
+                  })
+                }}
+              </td>
+              <td>
+                <span
+                  class="fw-bold"
+                  [style.color]="
+                    getTextColor(product.stocks, product.expiration)
+                  "
+                >
+                  {{ product.stocks }}</span
+                >
+              </td>
+              <td>
+                <span
+                  class="p-1"
+                  style="border-radius: 3px"
+                  [style.color]="
+                    getStatusColor(product.stocks, product.expiration) ===
+                    'yellow'
+                      ? 'black'
+                      : 'white'
+                  "
+                  [style.backgroundColor]="
+                    getStatusColor(product.stocks, product.expiration)
+                  "
+                >
+                  {{ getText(product.stocks, product.expiration) }}
+                </span>
+              </td>
+              <td>
+                <span
+                  class="badge text-bg-danger"
+                  *ngIf="product.expiration < currentDate"
+                  >{{ formatDate(product.expiration) }}</span
+                >
+                <span
+                  class="badge text-bg-success"
+                  *ngIf="product.expiration > currentDate"
+                >
+                  {{ formatDate(product.expiration) }}</span
+                >
+              </td>
+              <td>
+                <div class="d-flex align-items-center gap-2">
+                  <button
+                    type="button"
+                    class="btn btn-outline-success"
+                    placement="top"
+                    (click)="updateProduct(product)"
+                    ngbTooltip="Edit Product Info"
+                  >
+                    <i class="fa-solid fa-pen"></i>
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-danger"
+                    placement="top"
+                    (click)="deleteProduc(product)"
+                    ngbTooltip="Delete Product"
+                  >
+                    <i class="fa-solid fa-trash"></i>
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-success"
+                    placement="top"
+                    ngbTooltip="Add Stocks"
+                    (click)="addStocks(product)"
+                  >
+                    <i class="fa-solid fa-plus"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <ngb-pagination
+        [(page)]="currentPage"
+        [pageSize]="itemsPerPage"
+        [collectionSize]="filteredProducts$.length"
+      ></ngb-pagination>
+    </div>
+
+    <!-- <div class="d-flex justify-content-center justify-content-between">
+      <button class="btn btn-outline-secondary" (click)="loadPrev()">
+        Previous
+      </button>
+      <button class="btn btn-outline-secondary" (click)="loadNext()">
+        Next
+      </button>
+    </div> -->
+  </div>
+</div>

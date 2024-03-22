@@ -1,0 +1,48 @@
+<div class="modal-header bg-success">
+  <h4 class="modal-title text-white">Add Stocks for {{ product.name }}</h4>
+  <button
+    type="button"
+    class="btn-close bg-white"
+    aria-label="Close"
+    (click)="activeModal.dismiss('Cross click')"
+  ></button>
+</div>
+<div class="modal-body">
+  <form class="row g-3 w-100" [formGroup]="stocksForm" (submit)="submit()">
+    <div class="col-md-6 mb-2">
+      <div class="form-floating">
+        <input
+          type="number"
+          class="form-control"
+          formControlName="stocks"
+          id="stocks"
+          placeholder="0"
+        />
+        <label for="inputQuantity">Stocks</label>
+      </div>
+    </div>
+    <div class="col-md-6 mb-2">
+      <div class="form-floating">
+        <input
+          type="date"
+          class="form-control"
+          [min]="currentDate"
+          id="inputExpiration"
+          formControlName="expiration"
+          placeholder="Expiration"
+        />
+        <label for="inputExpiration">Expiration</label>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button
+        type="button"
+        class="btn btn-outline-dark"
+        (click)="activeModal.close('Close click')"
+      >
+        Cancel
+      </button>
+      <button class="btn btn-danger" [type]="submit">Confirm</button>
+    </div>
+  </form>
+</div>

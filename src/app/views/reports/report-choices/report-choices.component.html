@@ -1,0 +1,78 @@
+<div class="modal-header bg-success">
+  <h4 class="modal-title text-white">Generate Report</h4>
+  <button
+    type="button"
+    class="btn-close bg-white"
+    aria-label="Close"
+    (click)="activeModal.dismiss('Cross click')"
+  ></button>
+</div>
+<div class="modal-body">
+  <form class="row g-3" [formGroup]="reportForm" (submit)="submitReport()">
+    <div class="col-md-6">
+      <div class="form-floating mb-3">
+        <input
+          type="date"
+          class="form-control"
+          id="startdate"
+          formControlName="startDate"
+        />
+        <label for="startdate" class="form-label">Start Date</label>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="form-floating mb-3">
+        <input
+          type="date"
+          class="form-control"
+          id="enddate"
+          formControlName="endDate"
+        />
+        <label for="enddate" class="form-label">End Date</label>
+      </div>
+      <div
+        *ngIf="
+          reportForm.get('endDate')?.hasError('dateRange') &&
+          reportForm.get('endDate')?.touched
+        "
+        class="text-danger"
+      >
+        Start date should not be higher than end date.
+      </div>
+    </div>
+    <div class="col-md-12">
+      <div class="form-floating">
+        <select
+          class="form-select"
+          id="floatingSelectGrid"
+          formControlName="type"
+        >
+          <option selected>Select Report to generate</option>
+          <option value="1">WALK IN TRANSACTIONS</option>
+          <option value="2">ONLINE TRANSACTIONS</option>
+          <option value="3">PICK UP TRANSACTIONS</option>
+          <option value="3">DELIVERY TRANSACTIONS</option>
+        </select>
+        <label for="floatingSelectGrid">Generate Report</label>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button
+        type="button"
+        class="btn btn-outline-dark"
+        (click)="activeModal.close('Close click')"
+      >
+        Cancel
+      </button>
+      <button
+        class="btn btn-danger"
+        type="submit"
+        [disabled]="reportForm.invalid"
+      >
+        Confirm
+      </button>
+    </div>
+    <pre>{{ reportForm.value | json }}</pre>
+    <pre>{{ reportForm.errors | json }}</pre>
+  </form>
+</div>

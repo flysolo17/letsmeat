@@ -1,0 +1,10 @@
+.box {
+  background-color: white;
+  border-radius: 10px;
+  padding: 1rem;
+}
+
+.box-2 {
+  display: flex-end;
+  gap: 10px;
+}

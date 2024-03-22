@@ -1,0 +1,266 @@
+<div class="container-fluid h-100 p-3">
+  <div class="d-flex flex-column gap-3 w-100 align-items-center p-3">
+    <div class="container-fluid box d-flex flex-column gap-3">
+      <h5>Product Info</h5>
+      <div>
+        <img [src]="PRODUCT_IMAGE" width="300px" height="200px" />
+        <div class="input-group" style="width: 300px">
+          <input
+            type="file"
+            accept="image/*"
+            class="form-control"
+            id="inputGroupFile04"
+            aria-describedby="inputGroupFileAddon04"
+            aria-label="Upload"
+            (change)="onSelectImage($event)"
+          />
+        </div>
+      </div>
+      <form class="row g-3 w-100" [formGroup]="productForm">
+        <div class="col-md-4 mb-2">
+          <div class="input-group">
+            <div class="form-floating">
+              <input
+                type="number"
+                class="form-control"
+                id="inputProductCode"
+                formControlName="code"
+                placeholder="ex. 124525451"
+              />
+              <label for="inputProductCode"> code</label>
+            </div>
+            <button
+              class="btn btn-success"
+              type="button"
+              (click)="generateProductID()"
+            >
+              Generate
+            </button>
+          </div>
+        </div>
+        <div class="col-md-8 mb-2">
+          <div class="form-floating">
+            <input
+              type="text"
+              class="form-control"
+              id="inputProductname"
+              formControlName="name"
+            />
+            <label for="inputProductname" class="form-label"
+              >Product name</label
+            >
+          </div>
+        </div>
+        <div class="col-md-6 mb-2">
+          <div class="form-floating">
+            <input
+              type="text"
+              class="form-control"
+              id="inputCategory"
+              formControlName="brand"
+              placeholder="Wagyu Beff"
+            />
+            <label for="inputProductName">Brand</label>
+          </div>
+        </div>
+        <div class="col-md-6 mb-2">
+          <div class="form-floating">
+            <input
+              type="date"
+              class="form-control"
+              [min]="currentDate"
+              id="inputExpiration"
+              formControlName="expiration"
+              placeholder="Expiration"
+            />
+            <label for="inputExpiration">Expiration</label>
+          </div>
+        </div>
+        <div class="col-md-6 mb-2">
+          <div class="form-floating">
+            <textarea
+              class="form-control"
+              placeholder="Write a short description here"
+              id="inputDescription"
+              formControlName="description"
+              style="height: 100px"
+            ></textarea>
+            <label for="inputDescription">Description</label>
+          </div>
+        </div>
+        <div class="col-md-6 mb-2">
+          <div class="form-floating mb-2">
+            <textarea
+              class="form-control"
+              placeholder="Write product details here!"
+              id="inputDetails"
+              formControlName="details"
+              style="height: 100px"
+              aria-describedby="detailsHelp"
+            >
+            </textarea>
+            <label for="inputDetails">Details</label>
+
+            <div id="detailsHelp" class="form-text">
+              Put a sentence ends with a period.
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 mb-2">
+          <div class="input-group">
+            <div class="form-floating">
+              <input
+                type="number"
+                class="form-control"
+                formControlName="weight"
+                id="weight"
+              />
+              <label for="weight">weight</label>
+            </div>
+            <div class="form-floating">
+              <select
+                class="form-select"
+                id="inputWeightType"
+                formControlName="type"
+              >
+                <option selected value="g">g</option>
+                <option value="kg">kg</option>
+                <option value="ml">ml</option>
+                <option value="l">l</option>
+              </select>
+              <label for="inputWeightType">weight type</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6 mb-2">
+          <div class="form-floating">
+            <input
+              type="number"
+              class="form-control"
+              formControlName="stocks"
+              id="stocks"
+              placeholder="0"
+            />
+            <label for="inputQuantity">Stocks</label>
+          </div>
+        </div>
+
+        <div class="col-md-6 mb-2">
+          <div class="form-floating">
+            <input
+              type="number"
+              class="form-control"
+              id="inputCost"
+              formControlName="cost"
+              placeholder="0"
+            />
+            <label for="inputCost">Cost in inventory</label>
+          </div>
+        </div>
+
+        <div class="col-md-6 mb-2">
+          <div class="form-floating mb-2">
+            <input
+              type="number"
+              class="form-control"
+              id="inputPrice"
+              formControlName="price"
+              placeholder="0"
+            />
+            <label for="inputPrice">Retail Price</label>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div class="container-fluid box d-flex flex-column gap-3">
+      <h5>Wholesaler Options</h5>
+      <form
+        class="row g-3 w-100"
+        [formGroup]="optionsForm"
+        (submit)="submitVariation()"
+      >
+        <div class="col-md-3 mb-2">
+          <div class="form-floating">
+            <input
+              type="text"
+              class="form-control"
+              id="name"
+              formControlName="name"
+              placeholder="ex. 124525451"
+            />
+            <label for="name">Name</label>
+          </div>
+        </div>
+
+        <div class="col-md-3 mb-2">
+          <div class="form-floating">
+            <input
+              class="form-control"
+              type="number"
+              id="quantity"
+              formControlName="quantity"
+            />
+            <label for="quantity">Quantity</label>
+          </div>
+        </div>
+        <div class="col-md-3 mb-2">
+          <div class="form-floating">
+            <input
+              type="number"
+              class="form-control"
+              formControlName="discount"
+              id="weight"
+            />
+            <label for="weight">Discount</label>
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <button
+            type="submit"
+            class="btn btn-primary"
+            [disabled]="optionsForm.invalid"
+          >
+            Save Option
+          </button>
+        </div>
+      </form>
+
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Quantiy</th>
+            <th scope="col">Discount</th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let options of options$; index as i">
+            <td>{{ options.name }}</td>
+            <td>{{ options.quantity }}</td>
+            <td>{{ options.discount }}</td>
+            <td>
+              <button class="btn btn-outline-danger" (click)="removeOption(i)">
+                <i class="fa-solid fa-trash"></i>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="contianer d-flex justify-content-end w-100">
+      <button
+        class="btn btn-success"
+        type="button"
+        (click)="onSubmitProduct()"
+        [disabled]="productForm.invalid"
+      >
+        Create Product
+      </button>
+    </div>
+  </div>
+</div>

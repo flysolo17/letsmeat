@@ -1,0 +1,29 @@
+<div class="d-flex align-items-center justify-content-center h-100">
+  <div class="box" *ngIf="users$ !== null">
+    <img
+      class="profile-img"
+      *ngIf="users$.profile !== ''; else placeholder"
+      [src]="users$.profile"
+      width="100px"
+      height="100px"
+    />
+
+    <ng-template #placeholder>
+      <img
+        class="profile-img"
+        src="../../../../assets/images/profile.jpg"
+        alt="Placeholder"
+        width="100px"
+        height="100px"
+      />
+    </ng-template>
+
+    <h5 class="fw-bold">{{ users$.type }}</h5>
+    <h5 class="fw-bold">{{ users$.name }}</h5>
+    <span class="text-secondary">{{ users$.email }}</span>
+    <span class="text-secondary">0{{ users$.phone }}</span>
+    <div class="d-flex gap-3">
+      <button class="btn btn-danger" (click)="logout()">LOGOUT</button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,114 @@
+<div class="container-fluid vh-100 m-0 p-0">
+  <div class="nav-container" style="margin: 0; padding: 0; overflow: hidden">
+    <div class="navigation">
+      <nav>
+        <div class="text-center">
+          <img
+            src="../../../../assets/images/logo.png "
+            class="m-3"
+            height="80px"
+          />
+        </div>
+        <ul>
+          <li routerLink="dashboard" routerLinkActive="active">
+            <a>
+              <i class="fa-solid fa-house me-3"></i>
+              Dashboard</a
+            >
+          </li>
+
+          <li routerLink="orders" routerLinkActive="active">
+            <a>
+              <i class="fa-solid fa-cart-shopping me-3"></i>
+              Orders
+              <span class="badge text-bg-secondary">{{
+                getPendingTransactions()
+              }}</span></a
+            >
+          </li>
+          <li routerLink="inventory" routerLinkActive="active">
+            <a>
+              <i class="fa-solid fa-boxes-stacked me-3"></i>
+              Inventory</a
+            >
+          </li>
+          <li routerLink="recent" routerLinkActive="active">
+            <a>
+              <i class="fa-solid fa-clock me-3"></i>
+              Recent Products</a
+            >
+          </li>
+          <li routerLink="messages" routerLinkActive="active">
+            <a>
+              <i class="fa-solid fa-message me-3"></i>
+              Message
+              <span class="badge text-bg-secondary">{{
+                countNewMessages(messages$, users$?.id ?? "")
+              }}</span></a
+            >
+          </li>
+          <li routerLink="transactions" routerLinkActive="active">
+            <a>
+              <i class="fa-solid fa-boxes-stacked me-3"></i>
+              Transactions</a
+            >
+          </li>
+
+          <li routerLink="customers" routerLinkActive="active">
+            <a>
+              <i class="fa-solid fa-users me-3"></i>
+              Customers</a
+            >
+          </li>
+          <li routerLink="staff" routerLinkActive="active">
+            <a>
+              <i class="fa-solid fa-users me-3"></i>
+              Staff</a
+            >
+          </li>
+          <li routerLink="profile" routerLinkActive="active">
+            <a>
+              <i class="fa-solid fa-user me-3"></i>
+              Profile</a
+            >
+          </li>
+        </ul>
+      </nav>
+    </div>
+    <div class="overflow-auto" style="width: 100%">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal fade"
+  id="logoutModal"
+  tabindex="-1"
+  aria-labelledby="logoutModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header bg-danger" style="color: white">
+        <h1 class="modal-title fs-5" id="logoutModalLabel">Logout</h1>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to logout?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn" data-bs-dismiss="modal">
+          cancel
+        </button>
+        <button
+          type="button"
+          class="btn btn-outline-danger"
+          data-bs-toggle="modal"
+          data-bs-target="#logoutModal"
+        >
+          Logout
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

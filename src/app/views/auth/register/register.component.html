@@ -1,0 +1,86 @@
+<div class="modal-header bg-success">
+  <h4 class="modal-title text-white">Register Account</h4>
+  <button
+    type="button"
+    class="btn-close bg-white"
+    aria-label="Close"
+    (click)="activeModal.dismiss('Cross click')"
+  ></button>
+</div>
+<div class="modal-body">
+  <div class="container-fluid">
+    <form [formGroup]="registerForm" (ngSubmit)="register()">
+      <div class="form-floating mb-3">
+        <input
+          type="email"
+          class="form-control"
+          id="email"
+          readonly
+          formControlName="email"
+        />
+        <label for="email" class="form-label">Email:</label>
+        <div
+          *ngIf="
+            registerForm.get('email')?.hasError('required') &&
+            registerForm.get('email')?.touched
+          "
+          class="text-danger"
+        >
+          Email is required.
+        </div>
+        <div
+          *ngIf="
+            registerForm.get('email')?.hasError('email') &&
+            registerForm.get('email')?.touched
+          "
+          class="text-danger"
+        >
+          Please enter a valid email address.
+        </div>
+      </div>
+      <div class="input-group mb-3">
+        <div class="form-floating">
+          <input
+            type="password"
+            class="form-control"
+            id="password"
+            formControlName="password"
+            name="password"
+            required
+            #passwordInput
+          />
+          <label for="password" class="form-label">Password:</label>
+          <span
+            *ngIf="
+              registerForm.get('password')?.invalid &&
+              registerForm.get('password')?.touched
+            "
+            class="text-danger"
+          >
+            Password is required.
+          </span>
+        </div>
+        <button
+          type="button"
+          class="btn btn-outline-secondary"
+          (click)="
+            passwordInput.type =
+              passwordInput.type === 'text' ? 'password' : 'text'
+          "
+        >
+          <i
+            class="far"
+            [ngClass]="{
+              'fa-eye': passwordInput.type === 'password',
+              'fa-eye-slash': passwordInput.type === 'text'
+            }"
+          ></i>
+        </button>
+      </div>
+
+      <button type="submit" class="btn btn-success w-100 btn-lg">
+        Register
+      </button>
+    </form>
+  </div>
+</div>

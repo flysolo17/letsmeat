@@ -1,0 +1,10 @@
+export enum TransactionStatus {
+  PENDING = 'PENDING',
+  ACCEPTED = 'ACCEPTED',
+  TO_SHIP = 'TO_SHIP',
+  TO_PICK_UP = 'TO_PICK_UP',
+  TO_RECEIVE = 'TO_RECEIVE',
+  COMPLETED = 'COMPLETED',
+  DECLINED = 'DECLINED',
+  CANCELED = 'CANCELED',
+}

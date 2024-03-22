@@ -1,0 +1,98 @@
+<div class="container-fluid h-100 d-flex">
+  <div class="box">
+    <div
+      class="container-fluid vh-100 align-items-center justify-content-center p-3"
+    >
+      <div class="d-flex align-items-center justify-content-between">
+        <h5>Customers</h5>
+
+        <input
+          type="text"
+          class="search-input w-100"
+          placeholder="Search customers..."
+          #searchBar
+          id="print-section"
+          (keyup)="onSearch(searchBar.value)"
+        />
+      </div>
+      <div class="container-fluid flex-grow-1 overflow-auto">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th scope="col">Profile</th>
+              <th scope="col">Name</th>
+              <th scope="col">Phone</th>
+              <th scope="col">Type</th>
+              <th scope="col">Default Address</th>
+              <th scope="col">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let customer of customers$">
+              <td>
+                <img
+                  class="profile-img"
+                  *ngIf="customer.profile !== ''; else placeholder"
+                  [src]="customer.profile"
+                  width="40px"
+                  height="40px"
+                />
+
+                <ng-template #placeholder>
+                  <img
+                    class="profile-img"
+                    src="../../../../assets/images/profile.jpg"
+                    alt="Placeholder"
+                    width="40px"
+                    height="40px"
+                  />
+                </ng-template>
+              </td>
+              <td>
+                <span class="fw-bold">{{ customer.fullname }}</span>
+              </td>
+              <td>
+                <span>{{ customer.phone }}</span>
+              </td>
+              <td>
+                <span>{{ customer.type }}</span>
+              </td>
+              <td>
+                <span>{{
+                  displayDefaultAddress(
+                    customer.defaultAddress,
+                    customer.addresses
+                  )
+                }}</span>
+              </td>
+              <td>
+                <div class="d-flex gap-2">
+                  <button
+                    class="btn btn-success"
+                    *ngIf="customer.type == 'REGULAR'"
+                    (click)="toWholesaler(customer.id ?? '')"
+                  >
+                    Make Wholesaler
+                  </button>
+                  <button
+                    class="btn btn-warning"
+                    (click)="toRegular(customer.id ?? '')"
+                    *ngIf="customer.type == 'WHOLESALER'"
+                  >
+                    Return to Regular
+                  </button>
+                  <div
+                    class="btn btn-outline-success"
+                    (click)="viewProfile(customer)"
+                  >
+                    View Profile
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

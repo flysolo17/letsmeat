@@ -1,0 +1,67 @@
+<div class="modal-header bg-dark">
+  <h4 class="modal-title text-white">Add Expenses</h4>
+  <button
+    type="button"
+    class="btn-close bg-white"
+    aria-label="Close"
+    (click)="activeModal.dismiss(false)"
+  ></button>
+</div>
+<div class="modal-body">
+  <form [formGroup]="expensesForm$" (submit)="onSubmit()">
+    <div class="form-floating mb-3">
+      <input
+        type="text"
+        class="form-control"
+        id="cash"
+        formControlName="cash"
+      />
+      <label for="cash" class="form-label">Total Amount</label>
+      <div
+        *ngIf="
+          expensesForm$.get('cash')?.invalid &&
+          expensesForm$.get('cash')?.touched
+        "
+        class="text-danger"
+      >
+        Cash is required
+      </div>
+    </div>
+
+    <div class="form-floating mb-3">
+      <input
+        type="text"
+        class="form-control"
+        id="description"
+        formControlName="description"
+      />
+      <label for="description" class="form-label">Description</label>
+      <div
+        *ngIf="
+          expensesForm$.get('description')?.invalid &&
+          expensesForm$.get('description')?.touched
+        "
+        class="text-danger"
+      >
+        Description is required
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button
+        type="button"
+        class="btn btn-outline-dark"
+        (click)="activeModal.close(false)"
+      >
+        Cancel
+      </button>
+      <button
+        type="submit"
+        class="btn btn-dark"
+        [disabled]="expensesForm$.invalid"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</div>
