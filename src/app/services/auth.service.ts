@@ -30,7 +30,7 @@ import {
 import { v4 as uuidv4 } from 'uuid';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { collectionData } from 'rxfire/firestore';
-const USER_COLLECTION = 'Users';
+export const USER_COLLECTION = 'Users';
 @Injectable({
   providedIn: 'root',
 })

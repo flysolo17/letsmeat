@@ -14,6 +14,7 @@ import { OrdersComponent } from './orders/orders.component';
 import { ReportGenerationComponent } from '../reports/report-generation/report-generation.component';
 import { ViewTransactionComponent } from '../view-transaction/view-transaction.component';
 import { RecentProductsComponent } from './recent-products/recent-products.component';
+import { ExpensesComponent } from './expenses/expenses.component';
 
 const routes: Routes = [
   {
@@ -32,6 +33,7 @@ const routes: Routes = [
             (m) => m.InventoryRoutingModule
           ),
       },
+      { path: 'expenses', component: ExpensesComponent },
       { path: 'recent', component: RecentProductsComponent },
       { path: 'transactions', component: TransactionsComponent },
       { path: 'review-transaction', component: ViewTransactionComponent },

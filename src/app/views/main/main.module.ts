@@ -20,6 +20,7 @@ import { RecentProductsComponent } from './recent-products/recent-products.compo
 import { BrowserModule } from '@angular/platform-browser';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
+import { ExpensesComponent } from './expenses/expenses.component';
 @NgModule({
   declarations: [
     MainComponent,
@@ -28,6 +29,7 @@ import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
     CustomersComponent,
     RecentProductsComponent,
     StaffComponent,
+    ExpensesComponent,
     ViewCustomerProfileComponent,
     ProfileComponent,
     MessagesComponent,

@@ -4,9 +4,11 @@ import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { CustomerWithMessages } from 'src/app/models/CustomerWithMessages';
 import { Users } from 'src/app/models/accounts/User';
+import { ExpensesWithCashier } from 'src/app/models/expenses/ExpensesWithCashier';
 import { TransactionStatus } from 'src/app/models/transactions/TransactionStatus';
 import { Transactions } from 'src/app/models/transactions/Transactions';
 import { AuthService } from 'src/app/services/auth.service';
+import { ExpensesService } from 'src/app/services/expenses.service';
 import { MessagingService } from 'src/app/services/messaging.service';
 import { TransactionService } from 'src/app/services/transaction.service';
 
@@ -19,13 +21,19 @@ export class MainComponent implements OnInit {
   users$: Users | null = null;
   transaction$: Transactions[] = [];
   messages$: CustomerWithMessages[] = [];
+  expenses$: ExpensesWithCashier[] = [];
   constructor(
     private authService: AuthService,
     private router: Router,
     private transactionService: TransactionService,
     private messagingService: MessagingService,
+    private expensesService: ExpensesService,
     private toastr: ToastrService
   ) {
+    expensesService.getAllExpensesWithCashiers().then((data) => {
+      this.expenses$ = data;
+      expensesService.setExpenses(data);
+    });
     messagingService.getCustomerWithMessages().subscribe((data) => {
       this.messages$ = data;
       messagingService.setMessages(data);
@@ -46,6 +54,14 @@ export class MainComponent implements OnInit {
         this.authService.logout();
       }
     });
+  }
+
+  get expensesTotal() {
+    let count = 0;
+    this.expenses$.forEach((e) => {
+      count += e.expenses.cash;
+    });
+    return count;
   }
   getUserProfile(email: string) {
     this.authService.getUserByEmail(email).then((user: Users | null) => {

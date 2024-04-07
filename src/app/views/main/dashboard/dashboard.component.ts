@@ -10,17 +10,25 @@ import {
   ApexChart,
   ApexXAxis,
   ApexTitleSubtitle,
+  ApexStroke,
+  ApexTooltip,
+  ApexDataLabels,
 } from 'ng-apexcharts';
 import { Transactions } from 'src/app/models/transactions/Transactions';
 import { TransactionStatus } from 'src/app/models/transactions/TransactionStatus';
 import { UserType } from 'src/app/models/accounts/UserType';
 import { Router } from '@angular/router';
+import { ExpensesWithCashier } from 'src/app/models/expenses/ExpensesWithCashier';
+import { ExpensesService } from 'src/app/services/expenses.service';
 
 export type ChartOptions = {
   series: ApexAxisChartSeries;
   chart: ApexChart;
   xaxis: ApexXAxis;
   title: ApexTitleSubtitle;
+  stroke: ApexStroke;
+  tooltip: ApexTooltip;
+  dataLabels: ApexDataLabels;
 };
 export interface DetailsWithTransaction {
   details: TransactionDetails;
@@ -37,19 +45,22 @@ export class DashboardComponent implements OnInit {
   @ViewChild('chart') chart!: ChartComponent;
   public chartOptions: Partial<ChartOptions> = {};
   transactions$: Transactions[] = [];
-
+  expenses$: ExpensesWithCashier[] = [];
   constructor(
     private authService: AuthService,
     private transactionService: TransactionService,
+    private expensesService: ExpensesService,
     private router: Router
   ) {
+    expensesService.expenses$.subscribe((data) => {
+      this.expenses$ = data;
+    });
     authService.users$.subscribe((data) => {
       this.users$ = data;
     });
     transactionService.transactions$.subscribe((data) => {
       this.details$ = [];
       this.transactions$ = data;
-      this.generateChartData(data);
 
       data.forEach((value, index) => {
         value.details.forEach((details, index) => {
@@ -66,8 +77,16 @@ export class DashboardComponent implements OnInit {
       });
     });
   }
-  ngOnInit(): void {}
-
+  ngOnInit(): void {
+    this.generateChartData(this.transactions$, this.expenses$);
+  }
+  get expensesTotal() {
+    let count = 0;
+    this.expenses$.forEach((e) => {
+      count += e.expenses.cash;
+    });
+    return count;
+  }
   getTotalPerMonth(month: number): number {
     let count = 0;
     this.transactions$.map((data) => {
@@ -80,9 +99,13 @@ export class DashboardComponent implements OnInit {
     });
     return count;
   }
-  generateChartData(transactions: Transactions[]): void {
+
+  generateChartData(
+    transactions: Transactions[],
+    expenses: ExpensesWithCashier[]
+  ): void {
     const salesData = Array(12).fill(0);
-    const mySeriesData = Array(12).fill(0);
+    const expensesData = Array(12).fill(0);
 
     transactions.forEach((transaction) => {
       if (transaction.status === TransactionStatus.COMPLETED) {
@@ -92,6 +115,12 @@ export class DashboardComponent implements OnInit {
       }
     });
 
+    expenses.forEach((expense) => {
+      const month = new Date(expense.expenses.createdAt).getMonth();
+      expensesData[month] += expense.expenses.cash;
+    });
+    console.log(expensesData);
+
     this.chartOptions = {
       series: [
         {
@@ -100,13 +129,20 @@ export class DashboardComponent implements OnInit {
         },
         {
           name: 'Expenses',
-          data: mySeriesData,
+          data: expensesData,
         },
       ],
       chart: {
         height: 500,
-        type: 'line',
+        type: 'area',
       },
+      dataLabels: {
+        enabled: false,
+      },
+      stroke: {
+        curve: 'smooth',
+      },
+
       title: {
         text: 'Sales And Expenses Per Year',
       },

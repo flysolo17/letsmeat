@@ -26,6 +26,7 @@
           type="date"
           class="form-control"
           id="enddate"
+          [min]="reportForm.get('startDate')?.value"
           formControlName="endDate"
         />
         <label for="enddate" class="form-label">End Date</label>

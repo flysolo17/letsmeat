@@ -31,9 +31,20 @@ import { AddDriverComponent } from './views/add-driver/add-driver.component';
 import { ViewTransactionComponent } from './views/view-transaction/view-transaction.component';
 import { AddExpensesComponent } from './dialogs/add-expenses/add-expenses.component';
 import { AddStartingCashComponent } from './dialogs/add-starting-cash/add-starting-cash.component';
+import { DateRangePickerComponent } from './views/custom/date-range-picker/date-range-picker.component';
 
 @NgModule({
-  declarations: [AppComponent, AddPaymentComponent, ReportChoicesComponent, UpdateTransactionStatusComponent, AddDriverComponent, ViewTransactionComponent, AddExpensesComponent, AddStartingCashComponent],
+  declarations: [
+    AppComponent,
+    AddPaymentComponent,
+    ReportChoicesComponent,
+    UpdateTransactionStatusComponent,
+    AddDriverComponent,
+    ViewTransactionComponent,
+    AddExpensesComponent,
+    AddStartingCashComponent,
+    DateRangePickerComponent,
+  ],
   imports: [
     BrowserModule,
     NgbDatepickerModule,
@@ -45,6 +56,7 @@ import { AddStartingCashComponent } from './dialogs/add-starting-cash/add-starti
     NgbNavModule,
     ReactiveFormsModule,
     EmployeeModule,
+    NgbDatepickerModule,
     MainModule,
     BrowserAnimationsModule,
     ToastrModule.forRoot(),

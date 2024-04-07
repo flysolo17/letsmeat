@@ -7,6 +7,7 @@
             <img
               src="../../../../assets/images/sales.png"
               height="80px"
+              class="mb-3"
               width="80px"
             />
             <div>
@@ -27,10 +28,18 @@
             <img
               src="../../../../assets/images/expenses.png"
               height="80px"
+              class="mb-3"
               width="80px"
             />
             <div>
-              <h5 class="text-danger">{{ 0 }}</h5>
+              <h5 class="text-danger">
+                {{
+                  expensesTotal.toLocaleString("en-us", {
+                    style: "currency",
+                    currency: "PHP"
+                  })
+                }}
+              </h5>
               <p class="fw-light">Expenses</p>
             </div>
           </div>
@@ -41,6 +50,7 @@
               src="../../../../assets/images/revenue.png"
               height="80px"
               width="80px"
+              class="mb-3"
             />
             <div>
               <h5 class="text-success">
@@ -63,6 +73,9 @@
           type: 'line',}"
           [xaxis]="chartOptions.xaxis ?? { categories: [] }"
           [title]="chartOptions.title ?? { text: 'Sales' }"
+          [stroke]="chartOptions.stroke!"
+          [tooltip]="chartOptions.tooltip!"
+          [dataLabels]="chartOptions.dataLabels!"
         ></apx-chart>
       </div>
     </div>
