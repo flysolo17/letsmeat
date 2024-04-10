@@ -1,14 +1,14 @@
 <div class="modal-header bg-success">
-  <h4 class="modal-title text-white">Generate Report</h4>
+  <h4 class="modal-title text-white">Generate Inventory Report</h4>
   <button
     type="button"
     class="btn-close bg-white"
     aria-label="Close"
-    (click)="activeModal.dismiss('Cross click')"
+    (click)="activeModal.dismiss([])"
   ></button>
 </div>
 <div class="modal-body">
-  <form class="row g-3" [formGroup]="reportForm" (submit)="submitReport()">
+  <form class="row g-3" [formGroup]="reportForm" (submit)="sumbit()">
     <div class="col-md-6">
       <div class="form-floating mb-3">
         <input
@@ -41,27 +41,29 @@
         Start date should not be higher than end date.
       </div>
     </div>
+
     <div class="col-md-12">
       <div class="form-floating">
         <select
           class="form-select"
           id="floatingSelectGrid"
-          formControlName="type"
+          formControlName="brand"
         >
-          <option selected>Select Report to generate</option>
-          <option value="1">WALK IN TRANSACTIONS</option>
-          <option value="2">ONLINE TRANSACTIONS</option>
-          <option value="3">PICK UP TRANSACTIONS</option>
-          <option value="4">DELIVERY TRANSACTIONS</option>
+          <option selected>Select Brand</option>
+          <option *ngFor="let brand of brand$" [value]="brand">
+            {{ brand.toLocaleUpperCase() }}
+          </option>
         </select>
-        <label for="floatingSelectGrid">Generate Report</label>
+        <label for="floatingSelectGrid">Select Brand</label>
+        <span class="form-text text-muted">* Optional</span>
       </div>
     </div>
+
     <div class="modal-footer">
       <button
         type="button"
         class="btn btn-outline-dark"
-        (click)="activeModal.close('Close click')"
+        (click)="activeModal.close([])"
       >
         Cancel
       </button>

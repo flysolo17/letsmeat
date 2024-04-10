@@ -18,6 +18,7 @@ import {
   PrintTransactionData,
   PrintableTransactions,
 } from 'src/app/models/transactions/PrintableTransactions';
+import { TransactionType } from 'src/app/models/transactions/TransactionType';
 import { Transactions } from 'src/app/models/transactions/Transactions';
 import { AuthService } from 'src/app/services/auth.service';
 import { PrintingServiceService } from 'src/app/services/printing-service.service';
@@ -62,10 +63,7 @@ export class ReportChoicesComponent {
       let start = this.reportForm.get('startDate')?.value ?? '';
       let end = this.reportForm.get('endDate')?.value ?? '';
       let type = +this.reportForm.get('type')?.value ?? 0;
-      let transactions = this.getTransactionsByDate(
-        getStartTime(start),
-        getEndTime(end)
-      );
+
       let formattedDate = `${toFullShortDate(
         getStartTime(start)
       )} to ${toFullShortDate(getEndTime(end))}`;
@@ -74,7 +72,7 @@ export class ReportChoicesComponent {
         title: this.getTitle(type),
         description: 'Printed by : ' + this.users$?.name,
         date: formattedDate,
-        data: transactions,
+        data: this.generateTransactions(),
         shippintTotal: 0,
       };
       this.printingService.printInvoice(printData).finally(() => {
@@ -120,9 +118,40 @@ export class ReportChoicesComponent {
 
   getTitle(num: number): string {
     if (num === 1) {
-      return 'WALK IN TRANSACTIONS';
+      return 'Walk in Transactions';
+    } else if (num === 2) {
+      return 'Online Transactions';
+    } else if (num === 3) {
+      return 'Pick up Transactions';
+    } else if (num === 4) {
+      return 'Delivery Transactions';
+    } else {
+      return 'Transactions';
     }
-    return '';
+  }
+  generateTransactions(): Transactions[] {
+    const type: number = +this.reportForm.get('type')?.value ?? 0;
+    let start = this.reportForm.get('startDate')?.value ?? '';
+    let end = this.reportForm.get('endDate')?.value ?? '';
+    let transactions = this.getTransactionsByDate(
+      getStartTime(start),
+      getEndTime(end)
+    );
+
+    transactions = transactions.filter((e) => {
+      if (type === 1) {
+        return e.type === TransactionType.WALK_IN;
+      } else if (type === 2) {
+        return e.type !== TransactionType.WALK_IN;
+      } else if (type === 3) {
+        return e.type === TransactionType.PICK_UP;
+      } else if (type === 4) {
+        return e.type === TransactionType.DELIVERY;
+      }
+
+      return [];
+    });
+    return transactions;
   }
 }
 

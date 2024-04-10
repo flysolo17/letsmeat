@@ -1,5 +1,10 @@
 import { Component } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
+import { user } from 'rxfire/auth';
+import { Users } from 'src/app/models/accounts/User';
 import { Products } from 'src/app/models/products/Products';
+import { AuthService } from 'src/app/services/auth.service';
+import { PrintingServiceService } from 'src/app/services/printing-service.service';
 import { ProductService } from 'src/app/services/product.service';
 import { countStocks, formatTimestamp } from 'src/app/utils/Constants';
 
@@ -14,8 +19,18 @@ export class RecentProductsComponent {
   oldProducts$: Products[] = [];
   today$: Products[] = [];
   lastWeek$: Products[] = [];
+  users$: Users | null = null;
   searchText: string = '';
-  constructor(private productService: ProductService) {
+  constructor(
+    private productService: ProductService,
+    private authService: AuthService,
+    private printingService: PrintingServiceService,
+    private toastr: ToastrService
+  ) {
+    authService.users$.subscribe((data) => {
+      this.users$ = data;
+    });
+
     productService.listenToProducts().subscribe((data) => {
       this.products$ = data;
 
@@ -124,5 +139,47 @@ export class RecentProductsComponent {
     }
   }
 
-  convertToPdf(data: Products[]) {}
+  convertToPdf(data: 1 | 2 | 3 | 4) {
+    if (data === 1) {
+      if (this.today$.length > 0) {
+        this.printingService.printInventory(
+          'Product Added Today',
+          this.users$?.name ?? 'no name',
+          this.today$
+        );
+      } else {
+        this.toastr.error('No Products Today');
+      }
+    } else if (data === 2) {
+      if (this.lastWeek$.length > 0) {
+        this.printingService.printInventory(
+          'Product Added Last Week',
+          this.users$?.name ?? 'no name',
+          this.today$
+        );
+      } else {
+        this.toastr.error('No Products Last Week');
+      }
+    } else if (data === 3) {
+      if (this.oldProducts$.length > 0) {
+        this.printingService.printInventory(
+          'Old Products',
+          this.users$?.name ?? 'no name',
+          this.today$
+        );
+      } else {
+        this.toastr.error('No old Products');
+      }
+    } else {
+      if (this.expiredProducts$.length > 0) {
+        this.printingService.printInventory(
+          'Expired Products',
+          this.users$?.name ?? 'no name',
+          this.today$
+        );
+      } else {
+        this.toastr.error('No Exp Products');
+      }
+    }
+  }
 }

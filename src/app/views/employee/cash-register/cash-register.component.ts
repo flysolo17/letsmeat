@@ -12,7 +12,9 @@ import { Transactions } from 'src/app/models/transactions/Transactions';
 import { AuthService } from 'src/app/services/auth.service';
 import { CashRegisterService } from 'src/app/services/cash-register.service';
 import { ExpensesService } from 'src/app/services/expenses.service';
+import { PrintingServiceService } from 'src/app/services/printing-service.service';
 import { TransactionService } from 'src/app/services/transaction.service';
+import { getEndTime, getStartTime } from 'src/app/utils/Constants';
 
 @Component({
   selector: 'app-cash-register',
@@ -26,11 +28,11 @@ export class CashRegisterComponent implements OnInit {
   expenses$: Expenses[] = [];
   transaction$: Transactions[] = [];
   cashRegisters$: CashRegister[] = [];
-
   today$ = new Date();
   constructor(
     private authService: AuthService,
     private toastr: ToastrService,
+    private printingService: PrintingServiceService,
     private transactionService: TransactionService,
     private expensesService: ExpensesService,
     private cashRegisterService: CashRegisterService
@@ -105,5 +107,30 @@ export class CashRegisterComponent implements OnInit {
     this.transaction$.forEach((e) => (count += e.payment.total));
 
     return count;
+  }
+  printReport() {
+    let today = new Date();
+    let cashRegister = this.cashRegisters$.filter((entry) =>
+      this.isToday(entry.dateIssued, today)
+    );
+    console.log('clicked');
+    let expenses = this.expenses$;
+    let transaction = this.transaction$;
+    this.printingService
+      .printZreading(
+        this.users$?.name ?? 'no name',
+        transaction,
+        cashRegister,
+        expenses
+      )
+      .catch((e) => this.toastr.error(e['message'].toString()));
+  }
+
+  isToday(date1: Date, date2: Date) {
+    return (
+      date1.getFullYear() === date2.getFullYear() &&
+      date1.getMonth() === date2.getMonth() &&
+      date1.getDate() === date2.getDate()
+    );
   }
 }

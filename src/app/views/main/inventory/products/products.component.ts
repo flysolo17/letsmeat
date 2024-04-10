@@ -7,6 +7,10 @@ import { countStocks, formatTimestamp } from 'src/app/utils/Constants';
 import { DeleteProductComponent } from '../delete-product/delete-product.component';
 import { AddStocksComponent } from '../add-stocks/add-stocks.component';
 import { Router } from '@angular/router';
+import { InventoryReportComponent } from '../inventory-report/inventory-report.component';
+import { PrintingServiceService } from 'src/app/services/printing-service.service';
+import { Users } from 'src/app/models/accounts/User';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-products',
@@ -15,7 +19,7 @@ import { Router } from '@angular/router';
 })
 export class ProductsComponent {
   selectedID: string = '';
-
+  users$: Users | null = null;
   private modalService = inject(NgbModal);
   currentDate = new Date();
   products$: Products[] = [];
@@ -23,6 +27,20 @@ export class ProductsComponent {
   searchText: string = '';
   currentPage = 1;
   itemsPerPage = 10;
+  constructor(
+    private productService: ProductService,
+    private router: Router,
+    private printingService: PrintingServiceService,
+    private authService: AuthService
+  ) {
+    authService.users$.subscribe((data) => {
+      this.users$ = data;
+    });
+    this.productService.listenToProducts().subscribe((products) => {
+      this.products$ = products;
+      this.filteredProducts$ = products;
+    });
+  }
   deleteProduc(product: Products) {
     const modalRef = this.modalService.open(DeleteProductComponent);
     modalRef.componentInstance.product = product;
@@ -31,13 +49,6 @@ export class ProductsComponent {
   addStocks(product: Products) {
     const modalRef = this.modalService.open(AddStocksComponent);
     modalRef.componentInstance.product = product;
-  }
-
-  constructor(private productService: ProductService, private router: Router) {
-    this.productService.listenToProducts().subscribe((products) => {
-      this.products$ = products;
-      this.filteredProducts$ = products;
-    });
   }
 
   search(): void {
@@ -108,6 +119,19 @@ export class ProductsComponent {
     const encodedObject = encodeURIComponent(JSON.stringify(product));
     this.router.navigate(['/main/inventory/update'], {
       queryParams: { data: encodedObject },
+    });
+  }
+  generateReport() {
+    const modal = this.modalService.open(InventoryReportComponent);
+    modal.componentInstance.products = this.products$;
+    modal.result.then((products: Products[]) => {
+      if (products.length > 0) {
+        this.printingService.printInventory(
+          `Inventory Report`,
+          this.users$?.name ?? 'No name',
+          products
+        );
+      }
     });
   }
 }

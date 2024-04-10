@@ -3,6 +3,8 @@ import { Products } from '../models/products/Products';
 import { Addresses } from '../models/customers/Addresses';
 import { OrderItems } from '../models/transactions/OrderItems';
 import { Transactions } from '../models/transactions/Transactions';
+import { CashRegister } from '../models/cashregister/CashRegister';
+import { Expenses } from '../models/expenses/Expenses';
 
 export function generateNumberString(): string {
   let numberString = '';
@@ -17,6 +19,22 @@ export function generateNumberString(): string {
 
   return numberString;
 }
+export const getTransactionTotal = (transactions: Transactions[]): number => {
+  let total = 0;
+  transactions.forEach((e) => {
+    total += e.payment.total;
+  });
+
+  return total;
+};
+export const computeExpenses = (expense: Expenses[]): number => {
+  let total = 0;
+  expense.forEach((e) => {
+    total += e.cash;
+  });
+
+  return total;
+};
 
 export const computeTransactionTotal = (
   transactions: Transactions[]
@@ -150,4 +168,28 @@ export function formatDate(date: Date): string {
     day: '2-digit',
   };
   return date.toLocaleDateString('en-US', options);
+}
+
+export function computeInventoryCost(product: Products[]): number {
+  let total = 0;
+  product.forEach((e) => {
+    total += e.cost * e.stocks;
+  });
+  return total;
+}
+
+export function computeInventoryPrice(product: Products[]): number {
+  let total = 0;
+  product.forEach((e) => {
+    total += e.price * e.stocks;
+  });
+  return total;
+}
+
+export function computeStartingCash(cashRegister: CashRegister[]): number {
+  let total = 0;
+  cashRegister.forEach((e) => {
+    total += e.amount;
+  });
+  return total;
 }

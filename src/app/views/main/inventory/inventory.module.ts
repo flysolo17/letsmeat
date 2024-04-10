@@ -9,6 +9,7 @@ import { NgbPaginationModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { DeleteProductComponent } from './delete-product/delete-product.component';
 import { UpdateProductComponent } from './update-product/update-product.component';
 import { AddStocksComponent } from './add-stocks/add-stocks.component';
+import { InventoryReportComponent } from './inventory-report/inventory-report.component';
 
 @NgModule({
   declarations: [
@@ -17,7 +18,7 @@ import { AddStocksComponent } from './add-stocks/add-stocks.component';
     CreateProductComponent,
     DeleteProductComponent,
     UpdateProductComponent,
-
+    InventoryReportComponent,
     AddStocksComponent,
   ],
   imports: [
@@ -25,6 +26,7 @@ import { AddStocksComponent } from './add-stocks/add-stocks.component';
     InventoryRoutingModule,
     ReactiveFormsModule,
     FormsModule,
+
     NgbPaginationModule,
     NgbModule,
   ],

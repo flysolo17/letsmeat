@@ -1,11 +1,18 @@
 import { Component, inject } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
+import { user } from 'rxfire/auth';
 import { AddExpensesComponent } from 'src/app/dialogs/add-expenses/add-expenses.component';
 import { Users } from 'src/app/models/accounts/User';
+import {
+  PrintableExpenses,
+  filterExpensesDaily,
+  filterExpensesMonthly,
+} from 'src/app/models/expenses/Expenses';
 import { ExpensesWithCashier } from 'src/app/models/expenses/ExpensesWithCashier';
 import { AuthService } from 'src/app/services/auth.service';
 import { ExpensesService } from 'src/app/services/expenses.service';
+import { PrintingServiceService } from 'src/app/services/printing-service.service';
 
 @Component({
   selector: 'app-expenses',
@@ -36,7 +43,8 @@ export class ExpensesComponent {
   constructor(
     private expensesService: ExpensesService,
     private authService: AuthService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private printingService: PrintingServiceService
   ) {
     authService.users$.subscribe((data) => {
       this.users$ = data;
@@ -56,5 +64,21 @@ export class ExpensesComponent {
         this.toastr.warning('Add Expenses cancelled');
       }
     });
+  }
+
+  printExpenses(title: string) {
+    this.printingService.printExpenses(
+      title,
+      this.users$?.name ?? '',
+      filterExpensesMonthly(this.expenses$, new Date('2024-03-01'))
+    );
+  }
+
+  printData(title: string): PrintableExpenses[] {
+    let data: PrintableExpenses[] = [];
+    if (title === 'Daily') {
+      data = filterExpensesMonthly(this.expenses$, new Date('2024-03-01'));
+    }
+    return data;
   }
 }

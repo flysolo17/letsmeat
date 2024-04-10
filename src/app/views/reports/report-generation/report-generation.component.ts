@@ -49,14 +49,14 @@ export class ReportGenerationComponent implements OnInit {
   }
 
   convertToPdf() {
-    // const content = this.pdfContent.nativeElement;
-    // const pdf = new jsPDF('p', 'mm', 'a4');
-    // const options = { scale: 2 };
-    // html2canvas(content, options).then((canvas) => {
-    //   const imageData = canvas.toDataURL('image/png');
-    //   pdf.addImage(imageData, 'PNG', 0, 0, 210, 297); // A4 size: 210 x 297 mm
-    //   pdf.save(`${this.title$}.pdf`);
-    // });
+      // const content = this.pdfContent.nativeElement;
+      // const pdf = new jsPDF('p', 'mm', 'a4');
+      // const options = { scale: 2 };
+      // html2canvas(content, options).then((canvas) => {
+      //   const imageData = canvas.toDataURL('image/png');
+      //   pdf.addImage(imageData, 'PNG', 0, 0, 210, 297); // A4 size: 210 x 297 mm
+      //   pdf.save(`${this.title$}.pdf`);
+      // });
   }
   getTotal(): number {
     let count = 0;

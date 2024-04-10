@@ -18,14 +18,14 @@
         />
       </div>
       <button
-        class="btn btn-lg btn-outline-success"
+        class="btn btn-outline-success"
         style="width: 250px"
-        [routerLink]="['/main/inventory/create']"
+        (click)="generateReport()"
       >
         Download
       </button>
       <button
-        class="btn btn-lg btn-success"
+        class="btn btn-success"
         style="width: 250px"
         [routerLink]="['/main/inventory/create']"
       >

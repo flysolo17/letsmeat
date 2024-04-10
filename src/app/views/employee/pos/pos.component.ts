@@ -49,8 +49,8 @@ export class PosComponent {
       this.users$ = data;
     });
     productService.listenToProducts().subscribe((data: Products[]) => {
-      this.defaultProducts$ = data;
-      this.products$ = data;
+      this.defaultProducts$ = data.filter((e) => e.expiration > new Date());
+      this.products$ = data.filter((e) => e.expiration > new Date());
       const uniqueCategoriesSet = new Set(
         this.products$.map((e) => e.brand.toLocaleUpperCase())
       );
