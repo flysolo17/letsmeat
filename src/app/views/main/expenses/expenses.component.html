@@ -20,33 +20,16 @@
           (input)="search()"
         />
       </div>
-      <div class="row">
-        <div class="col">
-          <div ngbDropdown class="d-inline-block">
-            <button
-              type="button"
-              class="btn btn-outline-dark"
-              id="dropdownBasic1"
-              ngbDropdownToggle
-            >
-              Generate Report
-            </button>
-            <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
-              <button ngbDropdownItem (click)="printExpenses('Daily')">
-                Today
-              </button>
-              <button ngbDropdownItem (click)="printExpenses('Weekly')">
-                Weekly
-              </button>
-              <button ngbDropdownItem (click)="printExpenses('Monthly')">
-                Monthly
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
+      <button
+        type="button"
+        class="btn btn-outline-dark"
+        style="width: 250px"
+        (click)="openPrintExpenseDialog()"
+      >
+        Generate Report
+      </button>
       <button class="btn btn-dark" style="width: 250px" (click)="addExpenses()">
-        Add Products
+        Add Expenses
       </button>
     </div>
     <div class="table-responsive flex-grow-1">

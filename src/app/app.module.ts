@@ -32,6 +32,8 @@ import { ViewTransactionComponent } from './views/view-transaction/view-transact
 import { AddExpensesComponent } from './dialogs/add-expenses/add-expenses.component';
 import { AddStartingCashComponent } from './dialogs/add-starting-cash/add-starting-cash.component';
 import { DateRangePickerComponent } from './views/custom/date-range-picker/date-range-picker.component';
+import { PrintExpensesComponent } from './dialogs/print-expenses/print-expenses.component';
+import { ArchivingComponent } from './dialogs/archiving/archiving.component';
 
 @NgModule({
   declarations: [
@@ -44,6 +46,8 @@ import { DateRangePickerComponent } from './views/custom/date-range-picker/date-
     AddExpensesComponent,
     AddStartingCashComponent,
     DateRangePickerComponent,
+    PrintExpensesComponent,
+    ArchivingComponent,
   ],
   imports: [
     BrowserModule,

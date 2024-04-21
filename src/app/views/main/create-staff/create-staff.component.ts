@@ -51,7 +51,7 @@ export class CreateStaffComponent {
       profile: imageURL,
       name: name,
       email: email.toLocaleLowerCase(),
-      phone: phone,
+      phone: phone.toString(),
       type: type == 'STAFF' ? UserType.STAFF : UserType.DRIVER,
     };
     this.authService

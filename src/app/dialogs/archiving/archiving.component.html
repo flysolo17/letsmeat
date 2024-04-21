@@ -1,0 +1,79 @@
+<div class="modal-header bg-dark">
+  <h4 class="modal-title text-white">Archive Transactions</h4>
+  <button
+    type="button"
+    class="btn-close bg-white"
+    aria-label="Close"
+    (click)="activeModal.dismiss(false)"
+  ></button>
+</div>
+<div class="modal-body">
+  <form class="row g-3" [formGroup]="reportForm$" (submit)="onSubmit()">
+    <div class="col-md-12">
+      <div class="form-floating mb-3">
+        <input
+          type="text"
+          class="form-control"
+          id="title"
+          formControlName="title"
+        />
+        <label for="title" class="form-label">Title</label>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="form-floating mb-3">
+        <input
+          type="date"
+          class="form-control"
+          id="startdate"
+          formControlName="startDate"
+        />
+        <label for="startdate" class="form-label">Start Date</label>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="form-floating mb-3">
+        <input
+          type="date"
+          class="form-control"
+          id="enddate"
+          [min]="reportForm$.get('startDate')?.value"
+          formControlName="endDate"
+        />
+        <label for="enddate" class="form-label">End Date</label>
+      </div>
+      <div
+        *ngIf="
+          reportForm$.get('endDate')?.hasError('dateRange') &&
+          reportForm$.get('endDate')?.touched
+        "
+        class="text-danger"
+      >
+        Start date should not be higher than end date.
+      </div>
+    </div>
+    <div class="modal-footer d-flex g-3">
+      <button
+        type="button"
+        class="btn btn-outline-danger"
+        (click)="activeModal.close(false)"
+      >
+        Cancel
+      </button>
+      <button
+        type="button"
+        class="btn btn-danger"
+        (click)="deletePermanently()"
+      >
+        Delete Permanently
+      </button>
+      <button
+        type="submit"
+        class="btn btn-dark"
+        [disabled]="reportForm$.invalid"
+      >
+        Archive
+      </button>
+    </div>
+  </form>
+</div>

@@ -30,10 +30,6 @@ export class MainComponent implements OnInit {
     private expensesService: ExpensesService,
     private toastr: ToastrService
   ) {
-    expensesService.getAllExpensesWithCashiers().then((data) => {
-      this.expenses$ = data;
-      expensesService.setExpenses(data);
-    });
     messagingService.getCustomerWithMessages().subscribe((data) => {
       this.messages$ = data;
       messagingService.setMessages(data);
@@ -53,6 +49,11 @@ export class MainComponent implements OnInit {
       } else {
         this.authService.logout();
       }
+    });
+
+    this.expensesService.getAllExpensesWithCashiers().subscribe((data) => {
+      this.expenses$ = data;
+      this.expensesService.setExpenses(data);
     });
   }
 

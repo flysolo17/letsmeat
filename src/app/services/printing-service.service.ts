@@ -29,7 +29,11 @@ import {
   tableStartingCash,
   tableTransaction,
 } from '../utils/Tables';
-import { Expenses, PrintableExpenses } from '../models/expenses/Expenses';
+import {
+  Expenses,
+  PrintableExpenses,
+  computePrintableExpenses,
+} from '../models/expenses/Expenses';
 import { Products } from '../models/products/Products';
 import { CashRegister } from '../models/cashregister/CashRegister';
 
@@ -187,7 +191,7 @@ export class PrintingServiceService {
           },
         },
         {
-          text: 'Signature: ___________________________',
+          text: '___________________ \n \tMARIA THERESE',
           margin: [0, 20, 0, 0],
         },
 
@@ -231,7 +235,7 @@ export class PrintingServiceService {
         title: title,
         date: new Date().toLocaleDateString(),
       },
-      total: 0,
+      total: computePrintableExpenses(data),
     };
 
     const docDefinition: TDocumentDefinitions = {
@@ -274,13 +278,13 @@ export class PrintingServiceService {
           },
         },
         {
-          text: 'Signature: ___________________________',
+          text: '___________________ \n \tMARIA THERESE',
           margin: [0, 20, 0, 0],
         },
 
         [
           {
-            text: `Total: ${invoice.total}`,
+            text: `Total: ${toPHP(invoice.total)}`,
             alignment: 'right',
             margin: [0, 0, 0, 0],
           },
@@ -364,7 +368,7 @@ export class PrintingServiceService {
           },
         },
         {
-          text: 'Signature: ___________________________',
+          text: '___________________ \n \tMARIA THERESE',
           margin: [0, 20, 0, 0],
         },
 
@@ -501,7 +505,7 @@ export class PrintingServiceService {
           },
         },
         {
-          text: 'Signature: ___________________________',
+          text: '___________________ \n \tMARIA THERESE',
           margin: [0, 20, 0, 0],
         },
 

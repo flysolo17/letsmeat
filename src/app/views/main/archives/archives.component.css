@@ -1,0 +1,9 @@
+.box {
+  background-color: white;
+  border-radius: 10px;
+  padding: 1rem;
+}
+
+.box:hover {
+  background-color: rgb(211, 245, 216);
+}

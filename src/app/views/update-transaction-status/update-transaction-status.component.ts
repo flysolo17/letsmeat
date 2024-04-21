@@ -52,7 +52,12 @@ export class UpdateTransactionStatusComponent implements OnInit {
       };
       console.log(this.transaction);
       this.transactionService
-        .updateTransactionStatus(this.transaction.id, this.status, details)
+        .updateTransactionStatus(
+          this.transaction.id,
+          this.status,
+          details,
+          this.transaction.items
+        )
         .then((data) => {
           this.toastr.success(this.status, 'Transaction status updated!');
         })

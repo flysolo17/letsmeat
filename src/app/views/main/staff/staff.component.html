@@ -17,6 +17,7 @@
             <th scope="col">Phone</th>
             <th scope="col">Email</th>
             <th scope="col">Employment Type</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
@@ -51,6 +52,11 @@
             </td>
             <td>
               <span>{{ user.type }}</span>
+            </td>
+            <td>
+              <button class="btn btn-danger" (click)="deleteStaff(user.email)">
+                <i class="fa-solid fa-trash"></i>
+              </button>
             </td>
           </tr>
         </tbody>

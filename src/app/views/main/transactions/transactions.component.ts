@@ -13,6 +13,7 @@ import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import { UserType } from 'src/app/models/accounts/UserType';
 import { FormControl } from '@angular/forms';
 import { PrintingServiceService } from 'src/app/services/printing-service.service';
+import { ArchivingComponent } from 'src/app/dialogs/archiving/archiving.component';
 @Component({
   selector: 'app-transactions',
   templateUrl: './transactions.component.html',
@@ -20,8 +21,9 @@ import { PrintingServiceService } from 'src/app/services/printing-service.servic
 })
 export class TransactionsComponent {
   transactions$: Transactions[] = [];
-
+  private modalService = inject(NgbModal);
   default$: Transactions[] = [];
+  ALL: Transactions[] = [];
   users$: Users | null = null;
   filter = new FormControl('', { nonNullable: true });
   searchText: string = '';
@@ -37,6 +39,7 @@ export class TransactionsComponent {
       this.users$ = data;
     });
     transactionService.transactions$.subscribe((data) => {
+      this.ALL = data;
       if (this.users$?.type === UserType.ADMIN) {
         this.transactions$ = data;
         this.default$ = data;
@@ -49,8 +52,10 @@ export class TransactionsComponent {
     });
   }
 
-  private modalService = inject(NgbModal);
-
+  openArchiving() {
+    const modal = this.modalService.open(ArchivingComponent);
+    modal.componentInstance.transactions = this.ALL;
+  }
   openTransaction(transaction: Transactions) {
     const encodedTransaction = encodeURIComponent(JSON.stringify(transaction));
     const data = this.users$?.type === UserType.ADMIN ? 'main' : 'employee';

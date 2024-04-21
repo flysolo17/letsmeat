@@ -10,11 +10,22 @@ import {
   where,
 } from '@firebase/firestore';
 import { collectionData } from 'rxfire/firestore';
-import { BehaviorSubject, Observable, map } from 'rxjs';
+import {
+  BehaviorSubject,
+  Observable,
+  combineLatest,
+  from,
+  map,
+  switchMap,
+} from 'rxjs';
 import { Firestore, getDocs } from '@angular/fire/firestore';
 import { ExpensesWithCashier } from '../models/expenses/ExpensesWithCashier';
 import { Users, userConverter } from '../models/accounts/User';
 import { USER_COLLECTION } from './auth.service';
+import {
+  DocumentData,
+  QueryDocumentSnapshot,
+} from 'rxfire/firestore/interfaces';
 const EXPENSES_COLLECTION = 'Expenses';
 @Injectable({
   providedIn: 'root',
@@ -52,26 +63,33 @@ export class ExpensesService {
     return collectionData(q) as Observable<Expenses[]>;
   }
 
-  async getAllExpensesWithCashiers(): Promise<ExpensesWithCashier[]> {
+  getAllExpensesWithCashiers(): Observable<ExpensesWithCashier[]> {
     const q = query(
       collection(this.firestore, EXPENSES_COLLECTION).withConverter(
         ExpensesConverter
       ),
       orderBy('createdAt', 'desc')
+    ).withConverter(ExpensesConverter);
+
+    // Create an observable from the query
+    return from(getDocs(q)).pipe(
+      // SwitchMap to handle asynchronous operations sequentially
+      switchMap((querySnapshot) => {
+        const expensesWithCashiers$: Observable<ExpensesWithCashier>[] =
+          querySnapshot.docs.map((doc: QueryDocumentSnapshot<Expenses>) => {
+            const expenses = doc.data() as Expenses;
+            // Create an observable for each cashier
+            return from(this.getCashier(expenses.cashier)).pipe(
+              // Map the cashier data with the expenses data
+              map((user) => ({ expenses, user }))
+            );
+          });
+
+        // Combine all individual observables into a single observable array
+        return combineLatest(expensesWithCashiers$);
+      })
     );
-
-    const querySnapshot = await getDocs(q);
-    const expensesWithCashiers: ExpensesWithCashier[] = [];
-
-    for (const doc of querySnapshot.docs) {
-      const expenses = doc.data() as Expenses;
-      const user = await this.getCashier(expenses.cashier);
-      expensesWithCashiers.push({ expenses, user });
-    }
-
-    return expensesWithCashiers;
   }
-
   async getCashier(cashierID: string): Promise<Users> {
     const q = query(
       collection(this.firestore, USER_COLLECTION).withConverter(userConverter),

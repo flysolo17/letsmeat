@@ -76,6 +76,27 @@ export interface ExpensesWithCashier {
   expenses: Expenses;
   user: Users;
 }
+export function printExpenses(
+  expenses: ExpensesWithCashier[],
+  startDate: Date,
+  endDate: Date
+): PrintableExpenses[] {
+  const formattedDateRange = `${startDate.toLocaleDateString()} - ${endDate.toLocaleDateString()}`;
+
+  return expenses
+    .filter(({ expenses }) => {
+      const createdAtDate = expenses.createdAt;
+
+      return createdAtDate >= startDate && createdAtDate <= endDate;
+    })
+    .map(({ expenses, user }) => ({
+      id: expenses.id,
+      description: expenses.description,
+      amount: expenses.cash,
+      cashier: user.name,
+      createdAt: expenses.createdAt.toLocaleDateString(),
+    }));
+}
 
 export function filterExpensesDaily(
   expenses: ExpensesWithCashier[],
@@ -140,4 +161,14 @@ export function filterExpensesMonthly(
       cashier: user.name,
       createdAt: formattedDate,
     }));
+}
+
+export function computePrintableExpenses(
+  expenses: PrintableExpenses[]
+): number {
+  let count = 0;
+  expenses.forEach((element) => {
+    count += element.amount;
+  });
+  return count;
 }

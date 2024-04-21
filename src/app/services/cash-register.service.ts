@@ -42,10 +42,8 @@ export class CashRegisterService {
       where('cashierID', '==', cashierID),
       where('dateIssued', '>=', today),
       orderBy('dateIssued', 'desc')
-    );
+    ).withConverter(cashRegisterConverter);
 
-    return collectionData(q.withConverter(cashRegisterConverter)) as Observable<
-      CashRegister[]
-    >;
+    return collectionData(q) as Observable<CashRegister[]>;
   }
 }

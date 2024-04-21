@@ -18,6 +18,8 @@ import {
   getDocs,
   addDoc,
   orderBy,
+  deleteDoc,
+  writeBatch,
 } from '@angular/fire/firestore';
 import { signInWithEmailAndPassword } from '@firebase/auth';
 import { Users, userConverter } from '../models/accounts/User';
@@ -66,6 +68,9 @@ export class AuthService {
     );
     return collectionData(q) as Observable<Users[]>;
   }
+  deleteStaff(id: string) {
+    return deleteDoc(doc(this.firestore, USER_COLLECTION, id));
+  }
   async uploadProfile(file: File) {
     try {
       const fireRef = ref(this.storage, `${USER_COLLECTION}/${uuidv4()}`);
@@ -102,8 +107,17 @@ export class AuthService {
     return authState(this.auth);
   }
 
-  deleteAccount(email: string) {
-    //delete account in firebase auth and firestore
+  async deleteAccount(email: string) {
+    let batch = writeBatch(this.firestore);
+    let q = query(
+      collection(this.firestore, USER_COLLECTION),
+      where('email', '==', email)
+    );
+    const querySnapshot = await getDocs(q);
+    querySnapshot.docs.forEach((e) => {
+      batch.delete(e.ref);
+    });
+    return batch.commit();
   }
   logout() {
     signOut(this.auth);

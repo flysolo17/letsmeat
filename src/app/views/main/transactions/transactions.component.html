@@ -9,10 +9,16 @@
         id="print-section"
         (keyup)="onSearch(searchBar.value)"
       />
-      <button class="btn btn-outline-secondary" (click)="reportChoice()">
-        <i class="fa-solid fa-print me-3"></i>
-        Generate Report
-      </button>
+      <div class="d-flex gap-2">
+        <button class="btn btn-outline-secondary" (click)="openArchiving()">
+          <i class="fa-solid fa-box-archive me-3"></i>
+          Archive
+        </button>
+        <button class="btn btn-outline-secondary" (click)="reportChoice()">
+          <i class="fa-solid fa-print me-3"></i>
+          Generate Report
+        </button>
+      </div>
     </div>
     <div class="flex-grow-1 overflow-y-scroll">
       <table class="table table-borderless table-hover">

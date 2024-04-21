@@ -67,6 +67,7 @@ export class ProductOptionsSelectionComponent implements OnInit {
   onSubmitOrder() {
     let orderItems: OrderItems = {
       id: this.product.id,
+      productID: this.product.id,
       name: this.product.name,
       image: this.product.image,
       quantity: this.quantity$,

@@ -8,7 +8,7 @@ import {
 } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 
-import { collectionData } from 'rxfire/firestore';
+import { collectionData, docData } from 'rxfire/firestore';
 import { CustomerType } from '../models/customers/CustomerType';
 import { Customer, customerConverter } from '../models/customers/Customer';
 
@@ -43,5 +43,14 @@ export class CustomerService {
     ).catch((err) => {
       console.log(err);
     });
+  }
+
+  getCustomerByID(customerID: string): Observable<Customer> {
+    return docData(
+      doc(
+        collection(this.firesttore, CUSTOMER_COLLECTION),
+        customerID
+      ).withConverter(customerConverter)
+    ) as Observable<Customer>;
   }
 }

@@ -1,28 +1,40 @@
 import { Location } from '@angular/common';
-import { Component, Input, OnInit, inject } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { Subscription } from 'rxjs';
 import { Users } from 'src/app/models/accounts/User';
+import { Customer } from 'src/app/models/customers/Customer';
 import { OrderItems } from 'src/app/models/transactions/OrderItems';
 import { TransactionDetails } from 'src/app/models/transactions/TransactionDetails';
 import { TransactionType } from 'src/app/models/transactions/TransactionType';
 import { Transactions } from 'src/app/models/transactions/Transactions';
 import { AuthService } from 'src/app/services/auth.service';
+import { CustomerService } from 'src/app/services/customer.service';
+import { computeWeight } from 'src/app/utils/Constants';
 
 @Component({
   selector: 'app-view-transaction',
   templateUrl: './view-transaction.component.html',
   styleUrls: ['./view-transaction.component.css'],
 })
-export class ViewTransactionComponent implements OnInit {
+export class ViewTransactionComponent implements OnInit, OnDestroy {
   transaction!: Transactions;
   driver$: Users | null = null;
+  customerSub$: Subscription;
+  customer$: Customer | null = null;
   constructor(
     private activatedRoute: ActivatedRoute,
     public location: Location,
-    private authService: AuthService
-  ) {}
+    private authService: AuthService,
+    private customerService: CustomerService
+  ) {
+    this.customerSub$ = new Subscription();
+  }
+  ngOnDestroy(): void {
+    this.customerSub$.unsubscribe();
+  }
   ngOnInit(): void {
     this.activatedRoute.queryParams.subscribe((params) => {
       const encodedTransaction = params['data'];
@@ -49,6 +61,13 @@ export class ViewTransactionComponent implements OnInit {
         if (this.transaction.type === TransactionType.DELIVERY) {
           this.getDriver(this.transaction.driverID);
         }
+        if (decodedTransaction.customerID !== '') {
+          this.customerSub$ = this.customerService
+            .getCustomerByID(decodedTransaction.customerID)
+            .subscribe((data) => {
+              this.customer$ = data;
+            });
+        }
       }
     });
   }
@@ -69,5 +88,8 @@ export class ViewTransactionComponent implements OnInit {
   }
   openLink(link: string): void {
     window.open(link, '_blank');
+  }
+  computeWeight(items: OrderItems[]): string {
+    return computeWeight(items);
   }
 }

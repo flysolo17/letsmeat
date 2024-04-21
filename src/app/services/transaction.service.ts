@@ -41,10 +41,7 @@ export class TransactionService {
       ),
       transaction
     ).then((data) => {
-      if (
-        transaction.status == TransactionStatus.COMPLETED ||
-        transaction.status === TransactionStatus.ACCEPTED
-      ) {
+      if (transaction.status == TransactionStatus.COMPLETED) {
         this.updateProductQuantity(transaction.items);
       }
     });
@@ -54,9 +51,15 @@ export class TransactionService {
     order.map((item) => {
       let optionQuantity = item.options?.quantity ?? 1;
       let quantity = item.quantity * optionQuantity;
-      updateDoc(doc(this.firestore, PRODUCTS_COLLECTION, item.id), {
+      updateDoc(doc(this.firestore, PRODUCTS_COLLECTION, item.productID), {
         stocks: increment(-quantity),
-      });
+      })
+        .then((data) => {
+          console.log('success ');
+        })
+        .catch((err) => {
+          console.log(err.message);
+        });
     });
   }
 
@@ -85,16 +88,24 @@ export class TransactionService {
   updateTransactionStatus(
     transactionID: string,
     status: TransactionStatus,
-    details: TransactionDetails
+    details: TransactionDetails,
+    items: OrderItems[]
   ) {
     return updateDoc(
-      doc(collection(this.firestore, TRANSACTION_COLLECTION), transactionID),
+      doc(
+        collection(this.firestore, TRANSACTION_COLLECTION),
+        transactionID
+      ).withConverter(transactionConverter),
       {
         status: status,
         details: arrayUnion(details),
         updatedAt: new Date(),
       }
-    );
+    ).then((data) => {
+      if (status === TransactionStatus.ACCEPTED) {
+        this.updateProductQuantity(items);
+      }
+    });
   }
 
   acceptTransaction(transaction: Transactions) {
@@ -104,7 +115,9 @@ export class TransactionService {
         transaction.id
       ).withConverter(transactionConverter),
       transaction
-    );
+    ).then((data) => {
+      this.updateProductQuantity(transaction.items);
+    });
   }
 
   markAsPaid(

@@ -3,6 +3,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { user } from 'rxfire/auth';
 import { AddExpensesComponent } from 'src/app/dialogs/add-expenses/add-expenses.component';
+import { PrintExpensesComponent } from 'src/app/dialogs/print-expenses/print-expenses.component';
 import { Users } from 'src/app/models/accounts/User';
 import {
   PrintableExpenses,
@@ -26,7 +27,7 @@ export class ExpensesComponent {
   currentPage = 1;
   itemsPerPage = 10;
   users$: Users | null = null;
-
+  private modalService$ = inject(NgbModal);
   search() {
     this.currentPage = 1;
     this.filteredExpenses$ = this.expenses$.filter(
@@ -49,13 +50,16 @@ export class ExpensesComponent {
     authService.users$.subscribe((data) => {
       this.users$ = data;
     });
-    expensesService.expenses$.subscribe((data) => {
+    expensesService.getAllExpensesWithCashiers().subscribe((data) => {
       this.expenses$ = data;
       this.filteredExpenses$ = data;
     });
   }
 
-  private modalService$ = inject(NgbModal);
+  openPrintExpenseDialog() {
+    const modal = this.modalService$.open(PrintExpensesComponent);
+    modal.componentInstance.expenses = this.filteredExpenses$;
+  }
   addExpenses() {
     const modal = this.modalService$.open(AddExpensesComponent);
     modal.componentInstance.users = this.users$;

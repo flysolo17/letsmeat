@@ -2,6 +2,7 @@ import { Options } from '../products/Options';
 
 export interface OrderItems {
   id: string;
+  productID: string;
   name: string;
   image: string;
   quantity: number;

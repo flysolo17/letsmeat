@@ -66,7 +66,7 @@
               </p>
               <p class="fst-normal">
                 Order Weight :
-                <b> {{ transaction.shipping?.weight ?? 0 }} kg</b>
+                <b> {{ computeWeight(transaction.items) }}</b>
               </p>
               <p class="fst-normal">
                 Shipping Fee :
@@ -131,6 +131,50 @@
               Contact : <b>{{ driver$?.phone ?? "NA" }}</b>
             </p>
           </div>
+        </div>
+      </div>
+
+      <div class="box mt-3">
+        <h5>Customer Info</h5>
+        <div class="d-flex gap-3">
+          <img
+            class="profile-img"
+            [src]="
+              customer$?.profile ?? '../../../../assets/images/profile.jpg'
+            "
+            alt="Placeholder"
+            width="60px"
+            height="60px"
+          />
+          <div class="p-1">
+            <h6>{{ customer$?.fullname ?? "no name" }}</h6>
+            <span class="text-muted">{{ customer$?.phone ?? "no phone" }}</span>
+          </div>
+        </div>
+
+        <div class="w-100" *ngIf="transaction.type === 'DELIVERY'">
+          <hr />
+          <h5>Shipping Info</h5>
+          <p class="fst-normal">
+            Receiver :
+            <b>{{ transaction.address?.contacts?.name ?? "no name" }}</b>
+          </p>
+          <p class="fst-normal">
+            Phone #:
+            <b> {{ transaction.address?.contacts?.phone ?? "no phone" }}</b>
+          </p>
+
+          <br />
+          <h5>Delivery Address</h5>
+          <p class="fst-normal">
+            Address Line : <b>{{ transaction.address?.addressLine }}</b>
+          </p>
+          <p class="fst-normal">
+            Street : <b>{{ transaction.address?.street }}</b>
+          </p>
+          <p class="fst-normal">
+            Postal Code : <b>{{ transaction.address?.postalCode }}</b>
+          </p>
         </div>
       </div>
     </div>

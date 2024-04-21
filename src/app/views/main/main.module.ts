@@ -21,6 +21,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import { ExpensesComponent } from './expenses/expenses.component';
+import { ArchivesComponent } from './archives/archives.component';
+import { ViewArchivesComponent } from './view-archives/view-archives.component';
 @NgModule({
   declarations: [
     MainComponent,
@@ -32,6 +34,8 @@ import { ExpensesComponent } from './expenses/expenses.component';
     ExpensesComponent,
     ViewCustomerProfileComponent,
     ProfileComponent,
+    ArchivesComponent,
+    ViewArchivesComponent,
     MessagesComponent,
     ReportGenerationComponent,
     OrdersComponent,

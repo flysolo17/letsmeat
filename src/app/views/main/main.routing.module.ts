@@ -15,6 +15,8 @@ import { ReportGenerationComponent } from '../reports/report-generation/report-g
 import { ViewTransactionComponent } from '../view-transaction/view-transaction.component';
 import { RecentProductsComponent } from './recent-products/recent-products.component';
 import { ExpensesComponent } from './expenses/expenses.component';
+import { ArchivesComponent } from './archives/archives.component';
+import { ViewArchivesComponent } from './view-archives/view-archives.component';
 
 const routes: Routes = [
   {
@@ -25,6 +27,8 @@ const routes: Routes = [
       { path: 'dashboard', component: DashboardComponent },
 
       { path: 'orders', component: OrdersComponent },
+      { path: 'archives', component: ArchivesComponent },
+      { path: 'view-archives', component: ViewArchivesComponent },
       {
         path: 'inventory',
         component: InventoryMainComponent,
