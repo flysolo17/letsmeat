@@ -18,7 +18,7 @@ export class CustomersComponent {
   customers$: Customer[] = [];
   users$: any;
   default$: Customer[] = [];
-  private modalService = inject(NgbModal);
+
   constructor(
     private customerService: CustomerService,
     private toastr: ToastrService
@@ -29,12 +29,6 @@ export class CustomersComponent {
     });
   }
 
-  viewProfile(customer: Customer) {
-    const modalRef = this.modalService.open(ViewCustomerProfileComponent, {
-      fullscreen: true,
-    });
-    modalRef.componentInstance.customer = customer;
-  }
   toWholesaler(customerID: string) {
     this.customerService
       .toWholesaler(customerID)

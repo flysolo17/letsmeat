@@ -17,6 +17,7 @@ import { RecentProductsComponent } from './recent-products/recent-products.compo
 import { ExpensesComponent } from './expenses/expenses.component';
 import { ArchivesComponent } from './archives/archives.component';
 import { ViewArchivesComponent } from './view-archives/view-archives.component';
+import { ViewCustomerProfileComponent } from './view-customer-profile/view-customer-profile.component';
 
 const routes: Routes = [
   {
@@ -28,7 +29,7 @@ const routes: Routes = [
 
       { path: 'orders', component: OrdersComponent },
       { path: 'archives', component: ArchivesComponent },
-      { path: 'view-archives', component: ViewArchivesComponent },
+      { path: 'view-archives/:id', component: ViewArchivesComponent },
       {
         path: 'inventory',
         component: InventoryMainComponent,
@@ -43,6 +44,7 @@ const routes: Routes = [
       { path: 'review-transaction', component: ViewTransactionComponent },
       { path: 'report-generation', component: ReportGenerationComponent },
       { path: 'customers', component: CustomersComponent },
+      { path: 'view-customers/:id', component: ViewCustomerProfileComponent },
       { path: 'staff', component: StaffComponent },
       { path: 'messages', component: MessagesComponent },
       { path: 'profile', component: ProfileComponent },

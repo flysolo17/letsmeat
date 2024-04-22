@@ -10,7 +10,11 @@
         (keyup)="onSearch(searchBar.value)"
       />
       <div class="d-flex gap-2">
-        <button class="btn btn-outline-secondary" (click)="openArchiving()">
+        <button
+          class="btn btn-outline-secondary"
+          (click)="openArchiving()"
+          *ngIf="users$?.type === 'ADMIN'"
+        >
           <i class="fa-solid fa-box-archive me-3"></i>
           Archive
         </button>

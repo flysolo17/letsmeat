@@ -65,7 +65,10 @@
   </div>
   <div class="w-25 p-3 d-flex flex-column gap-2">
     <div class="orders overflow-auto flex-grow-1 bg-white">
-      <ul class="list-group list-group-flush" *ngFor="let items of orderItems$">
+      <ul
+        class="list-group list-group-flush"
+        *ngFor="let items of orderItems$; index as index"
+      >
         <li
           class="list-group-item d-flex justify-content-between align-items-start"
         >
@@ -84,6 +87,13 @@
               currency: "PHP"
             })
           }}</span>
+
+          <button
+            class="btn btn-sm btn-light"
+            (click)="cancelOrder(items, index)"
+          >
+            <i class="fa-solid fa-xmark"></i>
+          </button>
         </li>
       </ul>
     </div>

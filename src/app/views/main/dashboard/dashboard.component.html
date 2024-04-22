@@ -55,10 +55,13 @@
             <div>
               <h5 class="text-success">
                 {{
-                  computeTotalSales().toLocaleString("en-us", {
-                    style: "currency",
-                    currency: "PHP"
-                  })
+                  (computeTotalSales() - expensesTotal).toLocaleString(
+                    "en-us",
+                    {
+                      style: "currency",
+                      currency: "PHP"
+                    }
+                  )
                 }}
               </h5>
               <p class="fw-light">Revenue</p>

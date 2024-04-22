@@ -64,7 +64,7 @@ export class AuthService {
   getAllStaff(): Observable<Users[]> {
     const q = query(
       collection(this.firestore, USER_COLLECTION),
-      orderBy('type', 'asc')
+      where('type', '!=', 'ADMIN')
     );
     return collectionData(q) as Observable<Users[]>;
   }

@@ -83,7 +83,7 @@
                   </button>
                   <div
                     class="btn btn-outline-success"
-                    (click)="viewProfile(customer)"
+                    [routerLink]="['/main/view-customers/', customer.id]"
                   >
                     View Profile
                   </div>

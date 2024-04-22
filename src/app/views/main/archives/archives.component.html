@@ -2,7 +2,7 @@
   <h5>Archives</h5>
   <div class="row row-cols-4">
     <div class="col" *ngFor="let archive of archives$">
-      <div class="box" [routerLink]="['/main/view-archives']">
+      <div class="box" [routerLink]="['/main/view-archives', archive.id]">
         <i class="fa-solid fa-folder me-3"></i>
         {{ archive.title }}
       </div>

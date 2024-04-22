@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Archives } from 'src/app/models/archives/Archives';
 import { ArchiveService } from 'src/app/services/archive.service';
@@ -11,7 +12,7 @@ import { ArchiveService } from 'src/app/services/archive.service';
 export class ArchivesComponent implements OnDestroy {
   archives$: Archives[] = [];
   subs$: Subscription;
-  constructor(private archiveService: ArchiveService) {
+  constructor(private archiveService: ArchiveService, private router: Router) {
     this.subs$ = archiveService.getArchivesAllArchives().subscribe((data) => {
       this.archives$ = data;
     });

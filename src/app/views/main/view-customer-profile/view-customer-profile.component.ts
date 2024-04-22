@@ -1,6 +1,9 @@
-import { Component, Input, OnInit, inject } from '@angular/core';
+import { Location } from '@angular/common';
+import { Component, Input, OnDestroy, OnInit, inject } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
+import { Subscription } from 'rxjs';
 import { Addresses } from 'src/app/models/customers/Addresses';
 import { Customer } from 'src/app/models/customers/Customer';
 import { TransactionStatus } from 'src/app/models/transactions/TransactionStatus';
@@ -14,21 +17,45 @@ import { getDefaultAddress } from 'src/app/utils/Constants';
   templateUrl: './view-customer-profile.component.html',
   styleUrls: ['./view-customer-profile.component.css'],
 })
-export class ViewCustomerProfileComponent implements OnInit {
-  activeModal = inject(NgbActiveModal);
-  @Input() customer!: Customer;
+export class ViewCustomerProfileComponent implements OnInit, OnDestroy {
+  customer: Customer | null = null;
   transactions$: Transactions[] = [];
+  customerID$: string | null = null;
+  transactionSub$: Subscription;
+  customerSub$: Subscription;
+
+  default$: Transactions[] = [];
+  searchText: string = '';
   constructor(
     private transactionService: TransactionService,
     private customerService: CustomerService,
-    private toastr: ToastrService
-  ) {}
+    private toastr: ToastrService,
+    public route: ActivatedRoute,
+    private location: Location
+  ) {
+    this.transactionSub$ = new Subscription();
+    this.customerSub$ = new Subscription();
+    this.route.params.subscribe((params) => {
+      this.customerID$ = params['id'] || null;
+    });
+  }
+
   ngOnInit(): void {
-    this.transactionService
-      .getTransactionByCustomerID(this.customer.id ?? '')
+    this.customerSub$ = this.customerService
+      .getCustomerByID(this.customerID$ ?? '')
       .subscribe((data) => {
+        this.customer = data;
+      });
+    this.transactionSub$ = this.transactionService
+      .getTransactionByCustomerID(this.customerID$ ?? '')
+      .subscribe((data) => {
+        this.default$ = data;
         this.transactions$ = data;
       });
+  }
+  ngOnDestroy(): void {
+    this.transactionSub$.unsubscribe();
+    this.customerSub$.unsubscribe();
   }
   displayDefaultAddress(current: number, addresses: Addresses[]) {
     return getDefaultAddress(current, addresses);
@@ -70,13 +97,21 @@ export class ViewCustomerProfileComponent implements OnInit {
       .toWholesaler(customerID)
       .then(() => this.toastr.success('Successfully updated'))
       .catch((err) => this.toastr.error(err.toString()))
-      .finally(() => this.activeModal.close());
+      .finally(() => this.location.back());
   }
   toRegular(customerID: string) {
     this.customerService
       .toRegular(customerID)
       .then(() => this.toastr.success('Successfully updated'))
       .catch((err) => this.toastr.error(err.toString()))
-      .finally(() => this.activeModal.close());
+      .finally(() => this.location.back());
+  }
+
+  onSearch(data: string) {
+    if (data === '') {
+      this.transactions$ = this.default$;
+    } else {
+      this.transactions$ = this.default$.filter((e) => e.id.startsWith(data));
+    }
   }
 }

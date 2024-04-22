@@ -20,13 +20,14 @@ import { ArchivingComponent } from 'src/app/dialogs/archiving/archiving.componen
   styleUrls: ['./transactions.component.css'],
 })
 export class TransactionsComponent {
-  transactions$: Transactions[] = [];
   private modalService = inject(NgbModal);
+  transactions$: Transactions[] = [];
   default$: Transactions[] = [];
+  searchText: string = '';
   ALL: Transactions[] = [];
   users$: Users | null = null;
   filter = new FormControl('', { nonNullable: true });
-  searchText: string = '';
+
   currentPage = 1;
   itemsPerPage = 20;
   constructor(

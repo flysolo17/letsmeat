@@ -22,7 +22,6 @@ export interface Transactions {
   updatedAt: Date;
   transactionDate: Date;
 }
-
 export const transactionConverter = {
   toFirestore: (data: Transactions) => data,
   fromFirestore: (snap: QueryDocumentSnapshot) => {
@@ -37,7 +36,6 @@ export const transactionConverter = {
       transaction.payment.updatedAt as any
     )?.toDate();
 
-    // Convert details.createdAt to date
     if (transaction.details) {
       transaction.details.forEach((detail) => {
         detail.createdAt = (detail.createdAt as any).toDate();

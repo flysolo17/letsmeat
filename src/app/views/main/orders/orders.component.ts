@@ -89,7 +89,7 @@ export class OrdersComponent implements OnInit {
       }
       this.submitPayment(
         transaction.id ?? '',
-        this.users$?.name ?? '',
+        this.users$?.id ?? '',
         transaction.payment,
         details
       );

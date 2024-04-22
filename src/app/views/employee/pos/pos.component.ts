@@ -119,6 +119,16 @@ export class PosComponent {
       this.submitTotal(details);
     });
   }
+  cancelOrder(order: OrderItems, index: number) {
+    this.products$.forEach((e) => {
+      if (order.productID == e.id) {
+        let option = order.options?.quantity ?? 1;
+        let quan = order.quantity * option;
+        e.stocks += quan;
+      }
+    });
+    this.orderItems$.splice(index, 1);
+  }
 
   submitTotal(details: TransactionDetails) {
     let transactions: Transactions = {

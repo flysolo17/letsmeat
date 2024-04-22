@@ -13,6 +13,7 @@ export class AppComponent {
   title = 'letsmeat';
 
   constructor(private authService: AuthService, private router: Router) {
+    console.log(router.url);
     authService.listenToUser().subscribe((user: User | null) => {
       if (user !== null) {
         authService.getUserByEmail(user.email ?? '').then((data) => {
