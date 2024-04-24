@@ -191,7 +191,7 @@ export class PrintingServiceService {
           },
         },
         {
-          text: '___________________ \n \tMARIA THERESE',
+          text: '_____________________ \n  Freda Valdez Santos',
           margin: [0, 20, 0, 0],
         },
 
@@ -278,7 +278,7 @@ export class PrintingServiceService {
           },
         },
         {
-          text: '___________________ \n \tMARIA THERESE',
+          text: '_____________________ \n  Freda Valdez Santos',
           margin: [0, 20, 0, 0],
         },
 
@@ -368,7 +368,7 @@ export class PrintingServiceService {
           },
         },
         {
-          text: '___________________ \n \tMARIA THERESE',
+          text: '_____________________ \n  Freda Valdez Santos',
           margin: [0, 20, 0, 0],
         },
 
@@ -505,7 +505,7 @@ export class PrintingServiceService {
           },
         },
         {
-          text: '___________________ \n \tMARIA THERESE',
+          text: '_____________________ \n  Freda Valdez Santos',
           margin: [0, 20, 0, 0],
         },
 

@@ -120,9 +120,12 @@ export function generateDate() {
 
 export const toPHP = (num: number): string => {
   // Convert the number to a string and add commas for thousands separator
-  const formattedNum = num.toLocaleString('en-US');
+  const formattedNum = num.toLocaleString('en-US', {
+    style: 'currency',
+    currency: 'PHP',
+  });
 
-  return `₱ ${formattedNum}`;
+  return formattedNum;
 };
 
 export const toFullShortDate = (date: Date): string => {
