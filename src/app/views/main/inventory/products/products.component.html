@@ -120,6 +120,17 @@
                 <div class="d-flex align-items-center gap-2">
                   <button
                     type="button"
+                    [disabled]="isProductExpired(product.expiration)"
+                    class="btn btn-outline-secondary"
+                    placement="top"
+                    (click)="disposeProduct(product)"
+                    ngbTooltip="Dispose Products"
+                  >
+                    <i class="fa-solid fa-calendar-xmark"></i>
+                  </button>
+
+                  <button
+                    type="button"
                     class="btn btn-outline-success"
                     placement="top"
                     (click)="updateProduct(product)"
@@ -144,6 +155,16 @@
                     (click)="addStocks(product)"
                   >
                     <i class="fa-solid fa-plus"></i>
+                  </button>
+
+                  <button
+                    type="button"
+                    class="btn btn-secondary"
+                    placement="top"
+                    ngbTooltip="View Product"
+                    [routerLink]="['/main/inventory/view', product.id]"
+                  >
+                    <i class="fa-solid fa-eye"></i>
                   </button>
                 </div>
               </td>

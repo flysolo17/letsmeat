@@ -1,0 +1,23 @@
+<div class="modal-header bg-danger">
+  <h4 class="modal-title text-white">Insufficient Stocks</h4>
+  <button
+    type="button"
+    class="btn-close bg-white"
+    aria-label="Close"
+    (click)="activeModal.dismiss('CLOSED')"
+  ></button>
+</div>
+
+<div class="modal-body text-center">
+  <h6>
+    Your stocks is Insufficient for the order ID {{ transaction.id }} do you
+    want to continue ?
+  </h6>
+</div>
+<div class="modal-footer">
+  <button class="btn btn-outline-secondary" (click)="activeModal.dismiss('NO')">
+    Cancel
+  </button>
+
+  <button class="btn btn-danger" (click)="accept()">Confirm</button>
+</div>

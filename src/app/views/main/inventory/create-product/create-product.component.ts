@@ -13,6 +13,8 @@ import { Products } from 'src/app/models/products/Products';
 import { Options } from 'src/app/models/products/Options';
 import { ProductService } from 'src/app/services/product.service';
 import { generateNumberString } from 'src/app/utils/Constants';
+import { Users } from 'src/app/models/accounts/User';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-create-product',
@@ -22,11 +24,16 @@ import { generateNumberString } from 'src/app/utils/Constants';
 export class CreateProductComponent {
   currentDate: string;
   options$: Options[] = [];
+  users$: Users | null = null;
   constructor(
     private productService: ProductService,
     private toastr: ToastrService,
-    private location: Location
+    private location: Location,
+    private authService: AuthService
   ) {
+    authService.users$.subscribe((data) => {
+      this.users$ = data;
+    });
     const now = new Date();
     this.currentDate = now.toISOString().slice(0, 10);
   }
@@ -83,7 +90,7 @@ export class CreateProductComponent {
 
   saveProduct(product: Products) {
     this.productService
-      .createProduct(product)
+      .createProduct(product, this.users$?.id ?? '')
       .then(() => {
         this.toastr.success('new product added');
         this.productForm.reset();

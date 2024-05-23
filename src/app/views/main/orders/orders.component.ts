@@ -28,6 +28,9 @@ import { AddDriverComponent } from '../../add-driver/add-driver.component';
 import { ViewTransactionComponent } from '../../view-transaction/view-transaction.component';
 import { Router } from '@angular/router';
 import { UserType } from 'src/app/models/accounts/UserType';
+import { InsuficientStocksComponent } from 'src/app/dialogs/insuficient-stocks/insuficient-stocks.component';
+import { Products } from 'src/app/models/products/Products';
+import { ProductService } from 'src/app/services/product.service';
 
 @Component({
   selector: 'app-orders',
@@ -40,9 +43,9 @@ export class OrdersComponent implements OnInit {
   active = 1;
   currentPage = 1;
   itemsPerPage = 20;
-
   filteredProducts$: Transactions[] = [];
   searchText: string = '';
+  products$: Products[] = [];
   private modalService = inject(NgbModal);
   openTransaction(transaction: Transactions) {
     const encodedTransaction = encodeURIComponent(JSON.stringify(transaction));
@@ -55,8 +58,13 @@ export class OrdersComponent implements OnInit {
     private transactionService: TransactionService,
     private authService: AuthService,
     private toastr: ToastrService,
+    private productService: ProductService,
     private router: Router
   ) {
+    productService.listenToProducts().subscribe((data) => {
+      this.products$ = data;
+      console.log(this.products$.length + 'ok');
+    });
     authService.users$.subscribe((data) => {
       this.users$ = data;
     });
@@ -78,6 +86,10 @@ export class OrdersComponent implements OnInit {
     );
   }
 
+  showInsufficient(transaction: Transactions) {
+    const modal = this.modalService.open(InsuficientStocksComponent);
+    modal.componentInstance.transaction = transaction;
+  }
   addPayment(transaction: Transactions) {
     const modalRef = this.modalService.open(AddPaymentComponent, {});
     modalRef.componentInstance.total = transaction.payment.total;
@@ -161,6 +173,19 @@ export class OrdersComponent implements OnInit {
     }
   }
   acceptTransaction(transaction: Transactions) {
+    var stocksOk = true;
+    const items = transaction.items;
+    items.forEach((data) => {
+      // Find the corresponding product for the current item
+      const product = this.products$.find((e) => e.id === data.productID);
+      if (product && product.stocks < data.quantity) {
+        stocksOk = false;
+      }
+    });
+    if (!stocksOk) {
+      this.showInsufficient(transaction);
+      return;
+    }
     transaction.employeeID = this.users$?.id ?? '';
     transaction.status = TransactionStatus.ACCEPTED;
     transaction.details.push({

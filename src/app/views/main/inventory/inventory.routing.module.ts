@@ -6,6 +6,7 @@ import { ProductsComponent } from './products/products.component';
 import { InventoryMainComponent } from './inventory-main/inventory-main.component';
 import { CreateProductComponent } from './create-product/create-product.component';
 import { UpdateProductComponent } from './update-product/update-product.component';
+import { ViewProductComponent } from './view-product/view-product.component';
 const routes: Routes = [
   {
     path: '',
@@ -14,6 +15,7 @@ const routes: Routes = [
       { path: '', component: ProductsComponent },
       { path: 'create', component: CreateProductComponent },
       { path: 'update', component: UpdateProductComponent },
+      { path: 'view/:id', component: ViewProductComponent },
     ],
   },
 ];

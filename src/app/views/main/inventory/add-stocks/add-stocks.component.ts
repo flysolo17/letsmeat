@@ -7,7 +7,9 @@ import {
 } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
+import { Users } from 'src/app/models/accounts/User';
 import { Products } from 'src/app/models/products/Products';
+import { AuthService } from 'src/app/services/auth.service';
 import { ProductService } from 'src/app/services/product.service';
 
 @Component({
@@ -20,11 +22,16 @@ export class AddStocksComponent implements OnInit {
   activeModal = inject(NgbActiveModal);
   @Input() product!: Products;
   stocksForm: FormGroup;
+  users$: Users | null = null;
   constructor(
+    private authService: AuthService,
     private productService: ProductService,
     private fb: FormBuilder,
     private toastr: ToastrService
   ) {
+    authService.users$.subscribe((data) => {
+      this.users$ = data;
+    });
     const now = new Date();
     this.currentDate = now.toISOString().slice(0, 10);
     this.stocksForm = new FormGroup({});
@@ -42,7 +49,14 @@ export class AddStocksComponent implements OnInit {
     let stocks = this.stocksForm.get('stocks')?.value ?? 0;
 
     this.productService
-      .addStocks(this.product.id, this.getExpiration(), stocks)
+      .addStocks(
+        this.product.id,
+        this.getExpiration(),
+        stocks,
+        this.users$?.id ?? '',
+        this.product.name,
+        this.product.image
+      )
       .then(() => {
         this.toastr.success('New Stocks Added');
         this.activeModal.close('Close click');

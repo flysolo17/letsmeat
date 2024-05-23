@@ -4,3 +4,13 @@
   border-radius: 10px;
   padding: 1rem;
 }
+
+.container-fluid {
+  min-height: 100vh;
+  overflow: auto;
+  background-color: white;
+  padding: 1rem;
+}
+ng-template {
+  height: 100%;
+}

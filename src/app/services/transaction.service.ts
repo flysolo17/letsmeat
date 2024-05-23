@@ -10,6 +10,7 @@ import {
   setDoc,
   updateDoc,
   where,
+  writeBatch,
 } from '@angular/fire/firestore';
 import { TransactionDetails } from '../models/transactions/TransactionDetails';
 import {
@@ -22,7 +23,12 @@ import { TransactionStatus } from '../models/transactions/TransactionStatus';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { collectionData } from 'rxfire/firestore';
 import { Payment } from '../models/transactions/Payment';
-
+import { STOCK_MANAGEMENT } from './stock-management.service';
+import { generateNumberString } from '../utils/Constants';
+import {
+  StockManagement,
+  StockStatus,
+} from '../models/products/StockManagement';
 const TRANSACTION_COLLECTION = 'Transactions';
 @Injectable({
   providedIn: 'root',
@@ -42,25 +48,44 @@ export class TransactionService {
       transaction
     ).then((data) => {
       if (transaction.status == TransactionStatus.COMPLETED) {
-        this.updateProductQuantity(transaction.items);
+        this.updateProductQuantity(
+          transaction.items,
+          transaction.employeeID,
+          transaction.id
+        );
       }
     });
   }
 
-  updateProductQuantity(order: OrderItems[]) {
-    order.map((item) => {
-      let optionQuantity = item.options?.quantity ?? 1;
-      let quantity = item.quantity * optionQuantity;
-      updateDoc(doc(this.firestore, PRODUCTS_COLLECTION, item.productID), {
+  updateProductQuantity(
+    order: OrderItems[],
+    cashier: string,
+    transactionID: string
+  ) {
+    const batch = writeBatch(this.firestore);
+    order.forEach((data) => {
+      let optionQuantity = data.options?.quantity ?? 1;
+      let quantity = data.quantity * optionQuantity;
+      batch.update(doc(this.firestore, PRODUCTS_COLLECTION, data.productID), {
         stocks: increment(-quantity),
-      })
-        .then((data) => {
-          console.log('success ');
-        })
-        .catch((err) => {
-          console.log(err.message);
-        });
+      });
+      let stockID = generateNumberString();
+      let stock: StockManagement = {
+        id: stockID,
+        productID: data.productID,
+        staffID: cashier,
+        quantity: quantity,
+        expiration: null,
+        transactionID: transactionID,
+        status: StockStatus.OUT,
+        createdAt: new Date(),
+        productName: data.name,
+        productImg: data.image,
+      };
+      batch.set(doc(this.firestore, STOCK_MANAGEMENT, stockID), stock);
     });
+
+    batch.commit();
   }
 
   setTransactions(transactions: Transactions[]): void {
@@ -89,7 +114,8 @@ export class TransactionService {
     transactionID: string,
     status: TransactionStatus,
     details: TransactionDetails,
-    items: OrderItems[]
+    items: OrderItems[],
+    staffID: string
   ) {
     return updateDoc(
       doc(
@@ -103,7 +129,7 @@ export class TransactionService {
       }
     ).then((data) => {
       if (status === TransactionStatus.ACCEPTED) {
-        this.updateProductQuantity(items);
+        this.updateProductQuantity(items, staffID, transactionID);
       }
     });
   }
@@ -116,7 +142,11 @@ export class TransactionService {
       ).withConverter(transactionConverter),
       transaction
     ).then((data) => {
-      this.updateProductQuantity(transaction.items);
+      this.updateProductQuantity(
+        transaction.items,
+        transaction.employeeID,
+        transaction.id
+      );
     });
   }
 

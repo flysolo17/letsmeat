@@ -27,6 +27,7 @@ import {
   tableExpenses,
   tableInventory,
   tableStartingCash,
+  tableStockManagement,
   tableTransaction,
 } from '../utils/Tables';
 import {
@@ -36,6 +37,7 @@ import {
 } from '../models/expenses/Expenses';
 import { Products } from '../models/products/Products';
 import { CashRegister } from '../models/cashregister/CashRegister';
+import { StockManagement } from '../models/products/StockManagement';
 
 (<any>pdfMake).vfs = pdfFonts.pdfMake.vfs;
 
@@ -191,8 +193,10 @@ export class PrintingServiceService {
           },
         },
         {
-          text: '_____________________ \n  Freda Valdez Santos',
-          margin: [0, 20, 0, 0],
+          columns: [
+            ['_____________________', 'Freda Valdez Santos', 'Owner / Admin'],
+          ],
+          alignment: 'left',
         },
 
         [
@@ -278,8 +282,10 @@ export class PrintingServiceService {
           },
         },
         {
-          text: '_____________________ \n  Freda Valdez Santos',
-          margin: [0, 20, 0, 0],
+          columns: [
+            ['_____________________', 'Freda Valdez Santos', 'Owner / Admin'],
+          ],
+          alignment: 'left',
         },
 
         [
@@ -368,8 +374,10 @@ export class PrintingServiceService {
           },
         },
         {
-          text: '_____________________ \n  Freda Valdez Santos',
-          margin: [0, 20, 0, 0],
+          columns: [
+            ['_____________________', 'Freda Valdez Santos', 'Owner / Admin'],
+          ],
+          alignment: 'left',
         },
 
         [
@@ -505,8 +513,10 @@ export class PrintingServiceService {
           },
         },
         {
-          text: '_____________________ \n  Freda Valdez Santos',
-          margin: [0, 20, 0, 0],
+          columns: [
+            ['_____________________', 'Freda Valdez Santos', 'Owner / Admin'],
+          ],
+          alignment: 'left',
         },
 
         [
@@ -532,6 +542,103 @@ export class PrintingServiceService {
             margin: [0, 0, 0, 0],
           },
         ],
+      ],
+      styles: {
+        tableExample: {
+          margin: [0, 5, 0, 15],
+        },
+      },
+    };
+    pdfMake.createPdf(docDefinition).open();
+  }
+
+  async printStockmanageMent(
+    title: string,
+    users: string,
+    printDate: StockManagement[]
+  ) {
+    const logoImagePath = 'assets/images/logo.png'; // Update the path based on your project structure
+    const logoImageDataURL = await this.getImageDataUrl(logoImagePath);
+
+    const invoice: Invoice = {
+      logo: logoImageDataURL, // Replace with your logo URL
+      company: {
+        name: 'JJF Store',
+        address: 'Urdaneta City',
+        city: 'City, State, Zip',
+        phone: '09665325698',
+        email: 'letsmeat@example.com',
+      },
+
+      invoice: {
+        title: title,
+        description: '',
+        date: new Date().toLocaleDateString(),
+      },
+      total: '',
+    };
+
+    const docDefinition: TDocumentDefinitions = {
+      pageOrientation: 'landscape',
+      content: [
+        {
+          columns: [
+            {
+              image: logoImageDataURL,
+              fit: [100, 100],
+              width: 100,
+              alignment: 'left',
+            },
+            {
+              alignment: 'right',
+              width: '*',
+              text: [
+                { text: 'Recent Products\n\n', style: 'header' },
+                `Title: ${invoice.invoice.title}\n`,
+                `Printed By: ${users}\n`,
+
+                `Date: ${invoice.invoice.date}\n`,
+              ],
+            },
+          ],
+          columnGap: 20, // Add space between columns
+          margin: [0, 0, 0, 20], // Add space at the bottom
+        },
+
+        {
+          style: 'tableExample',
+          table: tableStockManagement(printDate),
+          layout: {
+            fillColor: function (
+              rowIndex: number,
+              node: any,
+              columnIndex: any
+            ) {
+              return rowIndex === 0 ? '#4CAF50' : null;
+            },
+          },
+        },
+        {
+          columns: [
+            ['_____________________', 'Freda Valdez Santos', 'Owner / Admin'],
+          ],
+          alignment: 'left',
+        },
+
+        // [
+        //   {
+        //     text: invoice.shipping
+        //       ? `Shipping Total: ${toPHP(invoice.shipping)}`
+        //       : '',
+        //     alignment: 'right',
+        //     margin: [0, 0, 0, 0],
+        //   },
+        //   {
+        //     text: `Total: ${invoice.total}`,
+        //     alignment: 'right',
+        //     margin: [0, 0, 0, 0],
+        //   },
+        // ],
       ],
       styles: {
         tableExample: {

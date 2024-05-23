@@ -56,7 +56,8 @@ export class UpdateTransactionStatusComponent implements OnInit {
           this.transaction.id,
           this.status,
           details,
-          this.transaction.items
+          this.transaction.items,
+          this.users.id!
         )
         .then((data) => {
           this.toastr.success(this.status, 'Transaction status updated!');

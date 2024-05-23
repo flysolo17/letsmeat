@@ -10,6 +10,8 @@ import { DeleteProductComponent } from './delete-product/delete-product.componen
 import { UpdateProductComponent } from './update-product/update-product.component';
 import { AddStocksComponent } from './add-stocks/add-stocks.component';
 import { InventoryReportComponent } from './inventory-report/inventory-report.component';
+import { ViewProductComponent } from './view-product/view-product.component';
+import { BrowserModule } from '@angular/platform-browser';
 
 @NgModule({
   declarations: [
@@ -17,16 +19,17 @@ import { InventoryReportComponent } from './inventory-report/inventory-report.co
     ProductsComponent,
     CreateProductComponent,
     DeleteProductComponent,
+    ViewProductComponent,
     UpdateProductComponent,
     InventoryReportComponent,
     AddStocksComponent,
   ],
   imports: [
+    BrowserModule,
     CommonModule,
     InventoryRoutingModule,
     ReactiveFormsModule,
     FormsModule,
-
     NgbPaginationModule,
     NgbModule,
   ],

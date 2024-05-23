@@ -23,6 +23,7 @@ import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import { ExpensesComponent } from './expenses/expenses.component';
 import { ArchivesComponent } from './archives/archives.component';
 import { ViewArchivesComponent } from './view-archives/view-archives.component';
+import { RecentProductComponent } from 'src/app/custom/recent-product/recent-product.component';
 @NgModule({
   declarations: [
     MainComponent,
@@ -36,6 +37,7 @@ import { ViewArchivesComponent } from './view-archives/view-archives.component';
     ProfileComponent,
     ArchivesComponent,
     ViewArchivesComponent,
+    RecentProductComponent,
     MessagesComponent,
     ReportGenerationComponent,
     OrdersComponent,

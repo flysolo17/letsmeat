@@ -1,0 +1,32 @@
+<table class="table table-borderless table-hover">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Name</th>
+      <th scope="col">Quantity</th>
+      <th scope="col">Expiration</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr
+      *ngFor="let product of products; index as index"
+      [routerLink]="['/main/inventory/view', product.productID]"
+    >
+      <th scope="row">{{ index + 1 }}</th>
+      <td>
+        <div class="d-flex gap-3">
+          <img
+            [src]="
+              product.productImg || '../../../assets/images/placeholder.jpeg'
+            "
+            width="40px"
+            height="40px"
+          />
+          <h5>{{ product.productName }}</h5>
+        </div>
+      </td>
+      <td>{{ product.quantity }}</td>
+      <td>{{ product.expiration?.toLocaleDateString() }}</td>
+    </tr>
+  </tbody>
+</table>

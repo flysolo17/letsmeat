@@ -11,6 +11,8 @@ import { InventoryReportComponent } from '../inventory-report/inventory-report.c
 import { PrintingServiceService } from 'src/app/services/printing-service.service';
 import { Users } from 'src/app/models/accounts/User';
 import { AuthService } from 'src/app/services/auth.service';
+import { DisposeProductComponent } from 'src/app/dialogs/dispose-product/dispose-product.component';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-products',
@@ -27,11 +29,13 @@ export class ProductsComponent {
   searchText: string = '';
   currentPage = 1;
   itemsPerPage = 10;
+
   constructor(
     private productService: ProductService,
     private router: Router,
     private printingService: PrintingServiceService,
-    private authService: AuthService
+    private authService: AuthService,
+    private toastr: ToastrService
   ) {
     authService.users$.subscribe((data) => {
       this.users$ = data;
@@ -39,6 +43,28 @@ export class ProductsComponent {
     this.productService.listenToProducts().subscribe((products) => {
       this.products$ = products;
       this.filteredProducts$ = products;
+    });
+  }
+  disposeProduct(product: Products) {
+    const modal = this.modalService.open(DisposeProductComponent);
+    modal.componentInstance.product = product;
+    modal.result.then((data) => {
+      if (data === 'YES') {
+        this.productService
+          .disposeProduct(
+            product.id,
+            product.name,
+            product.image,
+            product.expiration,
+            product.stocks,
+            this.users$?.id ?? ''
+          )
+          .then((data) =>
+            this.toastr.success(
+              `${product.stocks} pcs ${product.name} successfully disposed`
+            )
+          );
+      }
     });
   }
   deleteProduc(product: Products) {
@@ -133,5 +159,9 @@ export class ProductsComponent {
         );
       }
     });
+  }
+
+  isProductExpired(expiration: Date): boolean {
+    return new Date().getTime() < expiration.getTime();
   }
 }

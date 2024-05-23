@@ -3,9 +3,11 @@ import { ToastrService } from 'ngx-toastr';
 import { user } from 'rxfire/auth';
 import { Users } from 'src/app/models/accounts/User';
 import { Products } from 'src/app/models/products/Products';
+import { StockManagement } from 'src/app/models/products/StockManagement';
 import { AuthService } from 'src/app/services/auth.service';
 import { PrintingServiceService } from 'src/app/services/printing-service.service';
 import { ProductService } from 'src/app/services/product.service';
+import { StockManagementService } from 'src/app/services/stock-management.service';
 import { countStocks, formatTimestamp } from 'src/app/utils/Constants';
 
 @Component({
@@ -21,86 +23,44 @@ export class RecentProductsComponent {
   lastWeek$: Products[] = [];
   users$: Users | null = null;
   searchText: string = '';
+
+  active = 1;
+  stocks$: StockManagement[] = [];
+
   constructor(
     private productService: ProductService,
     private authService: AuthService,
     private printingService: PrintingServiceService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private stockManagementService: StockManagementService
   ) {
     authService.users$.subscribe((data) => {
       this.users$ = data;
     });
-
-    productService.listenToProducts().subscribe((data) => {
+    this.getProductToday();
+    productService.getExpiredProduct().subscribe((data) => {
+      this.expiredProducts$ = data;
       this.products$ = data;
-
-      const today = new Date();
-      this.today$ = this.products$.filter(
-        (product) =>
-          new Date(product.createdAt).toDateString() === today.toDateString() ||
-          new Date(product.updatedAt).toDateString() === today.toDateString()
-      );
-
-      const lastWeek = new Date();
-      lastWeek.setDate(lastWeek.getDate() - 7);
-      this.lastWeek$ = this.products$.filter(
-        (product) =>
-          product.createdAt >= lastWeek || product.updatedAt >= lastWeek
-      );
-
-      this.expiredProducts$ = this.products$.filter(
-        (e) => e.expiration < today
-      );
-
-      const eightDaysAgo = new Date();
-      eightDaysAgo.setDate(eightDaysAgo.getDate() - 8);
-      this.oldProducts$ = this.products$.filter(
-        (product) =>
-          product.createdAt < eightDaysAgo || product.updatedAt < eightDaysAgo
-      );
+      console.log(this.expiredProducts$);
     });
   }
 
-  filterProductsToday() {
-    const today = new Date();
-    this.today$ = this.products$.filter(
-      (product) =>
-        (new Date(product.createdAt).toDateString() === today.toDateString() ||
-          new Date(product.updatedAt).toDateString() ===
-            today.toDateString()) &&
-        product.name.toLowerCase().includes(this.searchText.toLowerCase())
-    );
+  getProductToday() {
+    this.stockManagementService.getStocksToday().subscribe((data) => {
+      this.stocks$ = data;
+      console.log(this.stocks$);
+    });
+  }
+  getProductLastWeek() {
+    this.stockManagementService.getProductLastWeek().subscribe((data) => {
+      this.stocks$ = data;
+    });
   }
 
-  filterProductsLastWeek() {
-    const lastWeek = new Date();
-    lastWeek.setDate(lastWeek.getDate() - 7);
-    this.lastWeek$ = this.products$.filter(
-      (product) =>
-        (product.createdAt >= lastWeek || product.updatedAt >= lastWeek) &&
-        product.name.toLowerCase().includes(this.searchText.toLowerCase())
-    );
-  }
-
-  filterExpiredProducts(): void {
-    const currentDate = new Date();
-    console.log('serching...');
-    this.expiredProducts$ = this.products$.filter(
-      (e) =>
-        e.expiration < currentDate &&
-        e.name.toLowerCase().includes(this.searchText.toLowerCase())
-    );
-  }
-
-  filterProductsOld() {
-    const eightDaysAgo = new Date();
-    eightDaysAgo.setDate(eightDaysAgo.getDate() - 8);
-    this.oldProducts$ = this.products$.filter(
-      (product) =>
-        (product.createdAt < eightDaysAgo ||
-          product.updatedAt < eightDaysAgo) &&
-        product.name.toLowerCase().includes(this.searchText.toLowerCase())
-    );
+  getOldProducts() {
+    this.stockManagementService.getProductNineDaysOld().subscribe((data) => {
+      this.stocks$ = data;
+    });
   }
 
   countStocks(product: Products) {
@@ -129,6 +89,18 @@ export class RecentProductsComponent {
     }
   }
 
+  generateStocksRepost(title: string) {
+    if (this.stocks$.length === 0) {
+      this.toastr.error('no ' + title);
+      return;
+    }
+    this.printingService.printStockmanageMent(
+      title,
+      this.users$?.name ?? 'no name',
+      this.stocks$
+    );
+  }
+
   getText(countStocks: number): string {
     if (countStocks > 50) {
       return 'In Stock';
@@ -139,47 +111,11 @@ export class RecentProductsComponent {
     }
   }
 
-  convertToPdf(data: 1 | 2 | 3 | 4) {
-    if (data === 1) {
-      if (this.today$.length > 0) {
-        this.printingService.printInventory(
-          'Product Added Today',
-          this.users$?.name ?? 'no name',
-          this.today$
-        );
-      } else {
-        this.toastr.error('No Products Today');
-      }
-    } else if (data === 2) {
-      if (this.lastWeek$.length > 0) {
-        this.printingService.printInventory(
-          'Product Added Last Week',
-          this.users$?.name ?? 'no name',
-          this.today$
-        );
-      } else {
-        this.toastr.error('No Products Last Week');
-      }
-    } else if (data === 3) {
-      if (this.oldProducts$.length > 0) {
-        this.printingService.printInventory(
-          'Old Products',
-          this.users$?.name ?? 'no name',
-          this.today$
-        );
-      } else {
-        this.toastr.error('No old Products');
-      }
-    } else {
-      if (this.expiredProducts$.length > 0) {
-        this.printingService.printInventory(
-          'Expired Products',
-          this.users$?.name ?? 'no name',
-          this.today$
-        );
-      } else {
-        this.toastr.error('No Exp Products');
-      }
-    }
+  convertToPdf(data: 4) {
+    this.printingService.printInventory(
+      'Expired Products',
+      this.users$?.name ?? 'no name',
+      this.expiredProducts$
+    );
   }
 }

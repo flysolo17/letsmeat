@@ -1,0 +1,78 @@
+<div class="container-fluid h-100 p-3 overflow-hidden">
+  <div class="box">
+    <h5 class="text-success">Stock Management</h5>
+    <div class="d-flex gap-2">
+      <div class="h-100 overflow-auto p-3 w-25">
+        <img
+          [src]="
+            product$?.image || '../../../../../assets/images/placeholder.jpeg'
+          "
+          width="200px"
+          height="200px"
+        />
+        <br />
+        <h5>{{ product$?.name }}</h5>
+        <br />
+        <ul class="list-group w-100">
+          <li class="list-group-item">
+            <p class="fw-semibold">Code : {{ product$?.id }}</p>
+          </li>
+          <li class="list-group-item">
+            <p class="fw-semibold">Brand : {{ product$?.brand }}</p>
+          </li>
+          <li class="list-group-item">
+            <p class="fw-semibold">
+              Expiration : {{ product$?.expiration?.toLocaleDateString() }}
+            </p>
+          </li>
+          <li class="list-group-item">
+            <p class="fw-semibold">Stocks : {{ product$?.stocks }}</p>
+          </li>
+          <li class="list-group-item">
+            <p class="fw-semibold">
+              Wholesale : {{ options(product$?.options ?? []) }}
+            </p>
+          </li>
+          <li class="list-group-item">
+            <p class="fw-semibold">Cost : {{ price(product$?.cost ?? 0) }}</p>
+          </li>
+
+          <li class="list-group-item">
+            <p class="fw-semibold">Price : {{ price(product$?.price ?? 0) }}</p>
+          </li>
+        </ul>
+      </div>
+      <div class="flex-grow-1 h-100 overflow-auto">
+        <table class="table table-borderless">
+          <thead>
+            <tr>
+              <th scope="col">ID</th>
+              <th scope="col">QUANTITY</th>
+              <th scope="col">STATUS</th>
+              <th scope="col">EXPIRATION</th>
+              <th scope="col">DATE</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let stocks of stockManagement$">
+              <th>
+                {{ stocks.id }}
+              </th>
+              <th>{{ stocks.quantity }}</th>
+              <td>
+                <span
+                  class="badge"
+                  [style.color]="stocks.status === 'IN' ? 'white' : 'black'"
+                  [style.backgroundColor]="getBackgroundColor(stocks.status)"
+                  >{{ stocks.status }}</span
+                >
+              </td>
+              <td>{{ stocks.expiration?.toLocaleDateString() ?? "NA" }}</td>
+              <td>{{ stocks.createdAt.toLocaleDateString() }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

@@ -34,6 +34,10 @@ import { AddStartingCashComponent } from './dialogs/add-starting-cash/add-starti
 import { DateRangePickerComponent } from './views/custom/date-range-picker/date-range-picker.component';
 import { PrintExpensesComponent } from './dialogs/print-expenses/print-expenses.component';
 import { ArchivingComponent } from './dialogs/archiving/archiving.component';
+import { DisposeProductComponent } from './dialogs/dispose-product/dispose-product.component';
+import { InventoryModule } from './views/main/inventory/inventory.module';
+import { RecentProductComponent } from './custom/recent-product/recent-product.component';
+import { InsuficientStocksComponent } from './dialogs/insuficient-stocks/insuficient-stocks.component';
 
 @NgModule({
   declarations: [
@@ -48,11 +52,15 @@ import { ArchivingComponent } from './dialogs/archiving/archiving.component';
     DateRangePickerComponent,
     PrintExpensesComponent,
     ArchivingComponent,
+
+    DisposeProductComponent,
+      InsuficientStocksComponent,
   ],
   imports: [
     BrowserModule,
     NgbDatepickerModule,
     AppRoutingModule,
+    InventoryModule,
     NgbModule,
     AuthModule,
     CommonModule,
